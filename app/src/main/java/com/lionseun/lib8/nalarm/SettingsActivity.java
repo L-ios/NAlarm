@@ -1,26 +1,23 @@
 package com.lionseun.lib8.nalarm;
 
 
-import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.app.ActionBar;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.List;
+import java.util.TimeZone;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -33,222 +30,285 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity {
-    /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
+public class SettingsActivity extends AppCompatActivity
+{
 
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
 
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
 
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
+    public static final String KEY_ALARM_SNOOZE = "snooze_duration";
+    public static final String KEY_ALARM_VOLUME = "volume_setting";
+    public static final String KEY_VOLUME_BEHAVIOR = "volume_button_setting";
+    public static final String KEY_AUTO_SILENCE = "auto_silence";
+    public static final String KEY_CLOCK_STYLE = "clock_style";
+    public static final String KEY_HOME_TZ = "home_time_zone";
+    public static final String KEY_AUTO_HOME_CLOCK = "automatic_home_clock";
+    public static final String KEY_VOLUME_BUTTONS = "volume_button_setting";
+    public static final String KEY_WEEK_START = "week_start";
 
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
+    public static final String DEFAULT_VOLUME_BEHAVIOR = "0";
+    public static final String VOLUME_BEHAVIOR_SNOOZE = "1";
+    public static final String VOLUME_BEHAVIOR_DISMISS = "2";
 
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
 
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
-
-    /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
-    private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
-
-    /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupActionBar();
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
+        setVolumeControlStream(AudioManager.STREAM_ALARM);
+        setContentView(R.layout.activity_settings);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
         }
+
+        
+        
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean onIsMultiPane() {
-        return isXLargeTablet(this);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.pref_headers, target);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+//        MenuItem help = menu.findItem(R.id.menu_item_help);
+//        if (help != null) {
+//            //Utils.prepareHelpMenuItem(this, help);
+//        }
+        return super.onCreateOptionsMenu(menu);
     }
 
-    /**
-     * This method stops fragment injection in malicious applications.
-     * Make sure to deny any unknown fragments here.
-     */
-    protected boolean isValidFragment(String fragmentName) {
-        return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
-    }
 
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
+    public static class PrefsFragment extends PreferenceFragment
+            implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+
+        private static CharSequence[][] mTimezones;
+        private long mTime;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
+            addPreferencesFromResource(R.xml.settings);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
+            // We don't want to reconstruct the timezone list every single time onResume() is
+            // called so we do it once in onCreate
+            if (mTimezones == null) {
+                mTime = System.currentTimeMillis();
+                mTimezones = getAllTimezones();
+            }
+            final ListPreference homeTimezonePref = (ListPreference) findPreference(KEY_HOME_TZ);
+            homeTimezonePref.setEntryValues(mTimezones[0]);
+            homeTimezonePref.setEntries(mTimezones[1]);
+            homeTimezonePref.setSummary(homeTimezonePref.getEntry());
+            homeTimezonePref.setOnPreferenceChangeListener(this);
         }
 
         @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+        public void onResume() {
+            super.onResume();
+            // By default, do not recreate the DeskClock activity
+            getActivity().setResult(RESULT_CANCELED);
+            refresh();
+        }
+
+        @Override
+        public boolean onPreferenceChange(Preference pref, Object newValue) {
+            if (KEY_AUTO_SILENCE.equals(pref.getKey())) {
+                final ListPreference autoSilencePref = (ListPreference) pref;
+                String delay = (String) newValue;
+                updateAutoSnoozeSummary(autoSilencePref, delay);
+            } else if (KEY_CLOCK_STYLE.equals(pref.getKey())) {
+                final ListPreference clockStylePref = (ListPreference) pref;
+                final int idx = clockStylePref.findIndexOfValue((String) newValue);
+                clockStylePref.setSummary(clockStylePref.getEntries()[idx]);
+            } else if (KEY_HOME_TZ.equals(pref.getKey())) {
+                final ListPreference homeTimezonePref = (ListPreference) pref;
+                final int idx = homeTimezonePref.findIndexOfValue((String) newValue);
+                homeTimezonePref.setSummary(homeTimezonePref.getEntries()[idx]);
+                notifyHomeTimeZoneChanged();
+            } else if (KEY_AUTO_HOME_CLOCK.equals(pref.getKey())) {
+                final boolean autoHomeClockEnabled = ((CheckBoxPreference) pref).isChecked();
+                final Preference homeTimeZonePref = findPreference(KEY_HOME_TZ);
+                homeTimeZonePref.setEnabled(!autoHomeClockEnabled);
+                notifyHomeTimeZoneChanged();
+            } else if (KEY_VOLUME_BUTTONS.equals(pref.getKey())) {
+                final ListPreference volumeButtonsPref = (ListPreference) pref;
+                final int index = volumeButtonsPref.findIndexOfValue((String) newValue);
+                volumeButtonsPref.setSummary(volumeButtonsPref.getEntries()[index]);
+            } else if (KEY_WEEK_START.equals(pref.getKey())) {
+                final ListPreference weekStartPref = (ListPreference) findPreference(KEY_WEEK_START);
+                final int idx = weekStartPref.findIndexOfValue((String) newValue);
+                weekStartPref.setSummary(weekStartPref.getEntries()[idx]);
+            }
+            // Set result so DeskClock knows to refresh itself
+            getActivity().setResult(RESULT_OK);
+            return true;
+        }
+
+        @Override
+        public boolean onPreferenceClick(Preference pref) {
+            final Activity activity = getActivity();
+            if (activity == null) {
+                return false;
+            }
+
+            if (KEY_ALARM_VOLUME.equals(pref.getKey())) {
+                final AudioManager audioManager =
+                        (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+                audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM,
+                        AudioManager.ADJUST_SAME, AudioManager.FLAG_SHOW_UI);
                 return true;
             }
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * This fragment shows notification preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+            return false;
         }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
+        /**
+         * Returns an array of ids/time zones. This returns a double indexed array
+         * of ids and time zones for Calendar. It is an inefficient method and
+         * shouldn't be called often, but can be used for one time generation of
+         * this list.
+         *
+         * @return double array of tz ids and tz names
+         */
+        public CharSequence[][] getAllTimezones() {
+//            Resources resources = this.getResources();
+//            String[] ids = resources.getStringArray(R.array.timezone_values);
+//            String[] labels = resources.getStringArray(R.array.timezone_labels);
+//            int minLength = ids.length;
+//            if (ids.length != labels.length) {
+//                minLength = Math.min(minLength, labels.length);
+//                LogUtils.e("Timezone ids and labels have different length!");
+//            }
+//            List<TimeZoneRow> timezones = new ArrayList<>();
+//            for (int i = 0; i < minLength; i++) {
+//                timezones.add(new TimeZoneRow(ids[i], labels[i]));
+//            }
+//            Collections.sort(timezones);
+//
+//            CharSequence[][] timeZones = new CharSequence[2][timezones.size()];
+//            int i = 0;
+//            for (TimeZoneRow row : timezones) {
+//                timeZones[0][i] = row.mId;
+//                timeZones[1][i++] = row.mDisplayName;
+//            }
+//            return timeZones;
+            return null;
+        }
+
+        private void refresh() {
+            final ListPreference autoSilencePref =
+                    (ListPreference) findPreference(KEY_AUTO_SILENCE);
+            String delay = autoSilencePref.getValue();
+            updateAutoSnoozeSummary(autoSilencePref, delay);
+            autoSilencePref.setOnPreferenceChangeListener(this);
+
+            final ListPreference clockStylePref = (ListPreference) findPreference(KEY_CLOCK_STYLE);
+            clockStylePref.setSummary(clockStylePref.getEntry());
+            clockStylePref.setOnPreferenceChangeListener(this);
+
+            final Preference autoHomeClockPref = findPreference(KEY_AUTO_HOME_CLOCK);
+            final boolean autoHomeClockEnabled =
+                    ((CheckBoxPreference) autoHomeClockPref).isChecked();
+            autoHomeClockPref.setOnPreferenceChangeListener(this);
+
+            final ListPreference homeTimezonePref = (ListPreference) findPreference(KEY_HOME_TZ);
+            homeTimezonePref.setEnabled(autoHomeClockEnabled);
+            homeTimezonePref.setSummary(homeTimezonePref.getEntry());
+            homeTimezonePref.setOnPreferenceChangeListener(this);
+
+            final ListPreference volumeButtonsPref =
+                    (ListPreference) findPreference(KEY_VOLUME_BUTTONS);
+            volumeButtonsPref.setSummary(volumeButtonsPref.getEntry());
+            volumeButtonsPref.setOnPreferenceChangeListener(this);
+
+            final Preference volumePref = findPreference(KEY_ALARM_VOLUME);
+            volumePref.setOnPreferenceClickListener(this);
+
+
+            final ListPreference weekStartPref = (ListPreference) findPreference(KEY_WEEK_START);
+            // Set the default value programmatically
+            final String value = weekStartPref.getValue();
+//            final int idx = weekStartPref.findIndexOfValue(
+//                    value == null ? String.valueOf(Utils.DEFAULT_WEEK_START) : value);
+//            weekStartPref.setValueIndex(idx);
+//            weekStartPref.setSummary(weekStartPref.getEntries()[idx]);
+//            weekStartPref.setOnPreferenceChangeListener(this);
+        }
+
+        private void updateAutoSnoozeSummary(ListPreference listPref, String delay) {
+//            int i = Integer.parseInt(delay);
+//            if (i == -1) {
+//                listPref.setSummary(R.string.auto_silence_never);
+//            } else {
+//                listPref.setSummary(Utils.getNumberFormattedQuantityString(getActivity(),
+//                        R.plurals.auto_silence_summary, i));
+//            }
+        }
+
+        private void notifyHomeTimeZoneChanged() {
+//            Intent i = new Intent(Cities.WORLDCLOCK_UPDATE_INTENT);
+//            getActivity().sendBroadcast(i);
+        }
+
+        private class TimeZoneRow implements Comparable<TimeZoneRow> {
+            private static final boolean SHOW_DAYLIGHT_SAVINGS_INDICATOR = false;
+
+            public final String mId;
+            public final String mDisplayName;
+            public final int mOffset;
+
+            public TimeZoneRow(String id, String name) {
+                mId = id;
+                TimeZone tz = TimeZone.getTimeZone(id);
+                boolean useDaylightTime = tz.useDaylightTime();
+                mOffset = tz.getOffset(mTime);
+                mDisplayName = buildGmtDisplayName(name, useDaylightTime);
             }
-            return super.onOptionsItemSelected(item);
-        }
-    }
 
-    /**
-     * This fragment shows data and sync preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class DataSyncPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_data_sync);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
+            @Override
+            public int compareTo(TimeZoneRow another) {
+                return mOffset - another.mOffset;
             }
-            return super.onOptionsItemSelected(item);
+
+            public String buildGmtDisplayName(String displayName, boolean useDaylightTime) {
+                int p = Math.abs(mOffset);
+                StringBuilder name = new StringBuilder("(GMT");
+                name.append(mOffset < 0 ? '-' : '+');
+
+                name.append(p / DateUtils.HOUR_IN_MILLIS);
+                name.append(':');
+
+                int min = p / 60000;
+                min %= 60;
+
+                if (min < 10) {
+                    name.append('0');
+                }
+                name.append(min);
+                name.append(") ");
+                name.append(displayName);
+                if (useDaylightTime && SHOW_DAYLIGHT_SAVINGS_INDICATOR) {
+                    name.append(" \u2600"); // Sun symbol
+                }
+                return name.toString();
+            }
         }
     }
 }

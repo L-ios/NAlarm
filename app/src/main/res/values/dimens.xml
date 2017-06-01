@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+
+
+
+    <dimen name="no_alarm_font_size">16sp</dimen>
+    <dimen name="no_alarms_size">90dp</dimen>
+    <dimen name="fab_height">96dp</dimen>
 </resources>
