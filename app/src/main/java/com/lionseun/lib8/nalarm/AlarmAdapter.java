@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by lingyang on 6/1/17.
@@ -42,6 +41,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return mTitles == null ? 0 : mTitles.length;
     }
 
+    public void startAlarmInfoActivity() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setClass(mContext, AlarmInfoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("alarminfo", null);
+        mContext.startActivity(intent, bundle);
+    }
+
+
     public class AlarmInfoViewHolder extends RecyclerView.ViewHolder {
         ImageView mAlarmIcon;
         TextView mAlarmTime;
@@ -64,11 +72,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             });
 
             view.setOnLongClickListener((v) -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setClass(mContext, AlarmInfoActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("alarminfo", null);
-                mContext.startActivity(intent, bundle);
+                AlarmAdapter.this.startAlarmInfoActivity();
                 return true;
             });
         }

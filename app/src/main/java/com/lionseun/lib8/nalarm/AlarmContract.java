@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.deskclock.provider;
+package com.lionseun.lib8.nalarm;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.android.deskclock.BuildConfig;
 
 /**
  * <p>
@@ -37,7 +36,7 @@ import com.android.deskclock.BuildConfig;
  * </li>
  * </ul>
  */
-public final class ClockContract {
+public final class AlarmContract {
     /**
      * This authority is used for writing to or querying from the clock
      * provider.
@@ -47,7 +46,7 @@ public final class ClockContract {
     /**
      * This utility class cannot be instantiated
      */
-    private ClockContract() {}
+    private AlarmContract() {}
 
     /**
      * Constants for tables with AlarmSettings.
