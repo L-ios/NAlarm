@@ -1,0 +1,560 @@
+OpenSSH_7.2p2 Ubuntu-4ubuntu2.2, OpenSSL 1.0.2g  1 Mar 2016
+OpenSSH_7.2p2 Ubuntu-4ubuntu2.2, OpenSSL 1.0.2g  1 Mar 2016
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: /etc/ssh/ssh_config line 19: Applying options for *
+debug1: /etc/ssh/ssh_config line 19: Applying options for *
+debug2: resolving "github.com" port 22
+debug2: resolving "github.com" port 22
+debug2: ssh_connect_direct: needpriv 0
+debug1: Connecting to github.com [192.30.255.112] port 22.
+debug2: ssh_connect_direct: needpriv 0
+debug1: Connecting to github.com [192.30.255.112] port 22.
+debug1: Connection established.
+debug1: Connection established.
+debug1: identity file /home/lionseun/.ssh/id_rsa type 1
+debug1: identity file /home/lionseun/.ssh/id_rsa type 1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_rsa-cert type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_rsa-cert type -1
+debug1: key_load_public: No such file or directory
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_dsa type -1
+debug1: identity file /home/lionseun/.ssh/id_dsa type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_dsa-cert type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_dsa-cert type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_ecdsa type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_ecdsa type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_ecdsa-cert type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_ecdsa-cert type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_ed25519 type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_ed25519-cert type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_ed25519 type -1
+debug1: key_load_public: No such file or directory
+debug1: identity file /home/lionseun/.ssh/id_ed25519-cert type -1
+debug1: Enabling compatibility mode for protocol 2.0
+debug1: Enabling compatibility mode for protocol 2.0
+debug1: Local version string SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.2
+debug1: Local version string SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.2
+debug1: Remote protocol version 2.0, remote software version libssh-0.7.0
+debug1: no match: libssh-0.7.0
+debug2: fd 3 setting O_NONBLOCK
+debug1: Authenticating to github.com:22 as 'git'
+debug1: Remote protocol version 2.0, remote software version libssh-0.7.0
+debug1: no match: libssh-0.7.0
+debug2: fd 3 setting O_NONBLOCK
+debug1: Authenticating to github.com:22 as 'git'
+debug3: hostkeys_foreach: reading file "/home/lionseun/.ssh/known_hosts"
+debug3: hostkeys_foreach: reading file "/home/lionseun/.ssh/known_hosts"
+debug3: record_hostkey: found key type RSA in file /home/lionseun/.ssh/known_hosts:1
+debug3: record_hostkey: found key type RSA in file /home/lionseun/.ssh/known_hosts:1
+debug3: load_hostkeys: loaded 1 keys from github.com
+debug3: load_hostkeys: loaded 1 keys from github.com
+debug3: order_hostkeyalgs: prefer hostkeyalgs: ssh-rsa-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+debug3: order_hostkeyalgs: prefer hostkeyalgs: ssh-rsa-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+debug3: send packet: type 20
+debug1: SSH2_MSG_KEXINIT sent
+debug3: send packet: type 20
+debug1: SSH2_MSG_KEXINIT sent
+debug3: receive packet: type 20
+debug1: SSH2_MSG_KEXINIT received
+debug2: local client KEXINIT proposal
+debug2: KEX algorithms: curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,ext-info-c
+debug3: receive packet: type 20
+debug1: SSH2_MSG_KEXINIT received
+debug2: local client KEXINIT proposal
+debug2: KEX algorithms: curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,ext-info-c
+debug2: host key algorithms: ssh-rsa-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519
+debug2: ciphers ctos: chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc
+debug2: ciphers stoc: chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc
+debug2: MACs ctos: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+debug2: compression ctos: none,zlib@openssh.com,zlib
+debug2: compression stoc: none,zlib@openssh.com,zlib
+debug2: languages ctos: 
+debug2: languages stoc: 
+debug2: first_kex_follows 0 
+debug2: reserved 0 
+debug2: peer server KEXINIT proposal
+debug2: KEX algorithms: curve25519-sha256@libssh.org,ecdh-sha2-nistp256,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1
+debug2: host key algorithms: ssh-dss,ssh-rsa
+debug2: ciphers ctos: chacha20-poly1305@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,blowfish-cbc
+debug2: host key algorithms: ssh-rsa-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519
+debug2: ciphers ctos: chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc
+debug2: ciphers stoc: chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc
+debug2: MACs ctos: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+debug2: compression ctos: none,zlib@openssh.com,zlib
+debug2: compression stoc: none,zlib@openssh.com,zlib
+debug2: languages ctos: 
+debug2: languages stoc: 
+debug2: first_kex_follows 0 
+debug2: reserved 0 
+debug2: peer server KEXINIT proposal
+debug2: KEX algorithms: curve25519-sha256@libssh.org,ecdh-sha2-nistp256,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1
+debug2: host key algorithms: ssh-dss,ssh-rsa
+debug2: ciphers ctos: chacha20-poly1305@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,blowfish-cbc
+debug2: ciphers stoc: chacha20-poly1305@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,blowfish-cbc
+debug2: MACs ctos: hmac-sha1,hmac-sha2-256,hmac-sha2-512
+debug2: MACs stoc: hmac-sha1,hmac-sha2-256,hmac-sha2-512
+debug2: compression ctos: none,zlib,zlib@openssh.com
+debug2: compression stoc: none,zlib,zlib@openssh.com
+debug2: ciphers stoc: chacha20-poly1305@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,blowfish-cbc
+debug2: MACs ctos: hmac-sha1,hmac-sha2-256,hmac-sha2-512
+debug2: MACs stoc: hmac-sha1,hmac-sha2-256,hmac-sha2-512
+debug2: compression ctos: none,zlib,zlib@openssh.com
+debug2: compression stoc: none,zlib,zlib@openssh.com
+debug2: languages ctos: 
+debug2: languages stoc: 
+debug2: first_kex_follows 0 
+debug2: reserved 0 
+debug1: kex: algorithm: curve25519-sha256@libssh.org
+debug2: languages ctos: 
+debug2: languages stoc: 
+debug2: first_kex_follows 0 
+debug2: reserved 0 
+debug1: kex: algorithm: curve25519-sha256@libssh.org
+debug1: kex: host key algorithm: ssh-rsa
+debug1: kex: host key algorithm: ssh-rsa
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug3: send packet: type 30
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug3: send packet: type 30
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug3: receive packet: type 31
+debug3: receive packet: type 31
+debug1: Server host key: ssh-rsa SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8
+debug1: Server host key: ssh-rsa SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8
+debug3: hostkeys_foreach: reading file "/home/lionseun/.ssh/known_hosts"
+debug3: hostkeys_foreach: reading file "/home/lionseun/.ssh/known_hosts"
+debug3: record_hostkey: found key type RSA in file /home/lionseun/.ssh/known_hosts:1
+debug3: record_hostkey: found key type RSA in file /home/lionseun/.ssh/known_hosts:1
+debug3: load_hostkeys: loaded 1 keys from github.com
+debug3: load_hostkeys: loaded 1 keys from github.com
+debug3: hostkeys_foreach: reading file "/home/lionseun/.ssh/known_hosts"
+debug3: hostkeys_foreach: reading file "/home/lionseun/.ssh/known_hosts"
+debug3: record_hostkey: found key type RSA in file /home/lionseun/.ssh/known_hosts:5
+debug3: load_hostkeys: loaded 1 keys from 192.30.255.112
+debug3: record_hostkey: found key type RSA in file /home/lionseun/.ssh/known_hosts:5
+debug3: load_hostkeys: loaded 1 keys from 192.30.255.112
+debug1: Host 'github.com' is known and matches the RSA host key.
+debug1: Found key in /home/lionseun/.ssh/known_hosts:1
+debug1: Host 'github.com' is known and matches the RSA host key.
+debug1: Found key in /home/lionseun/.ssh/known_hosts:1
+debug3: send packet: type 21
+debug2: set_newkeys: mode 1
+debug1: rekey after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug3: send packet: type 21
+debug2: set_newkeys: mode 1
+debug1: rekey after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug3: receive packet: type 21
+debug2: set_newkeys: mode 0
+debug1: rekey after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS received
+debug3: receive packet: type 21
+debug2: set_newkeys: mode 0
+debug1: rekey after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS received
+debug2: key: /home/lionseun/.ssh/id_rsa (0x55f7bb3e09b0), agent
+debug2: key: /home/lionseun/.ssh/id_rsa (0x55f7bb3e09b0), agent
+debug2: key: /home/lionseun/.ssh/id_dsa ((nil))
+debug2: key: /home/lionseun/.ssh/id_ecdsa ((nil))
+debug2: key: /home/lionseun/.ssh/id_ed25519 ((nil))
+debug3: send packet: type 5
+debug2: key: /home/lionseun/.ssh/id_dsa ((nil))
+debug2: key: /home/lionseun/.ssh/id_ecdsa ((nil))
+debug2: key: /home/lionseun/.ssh/id_ed25519 ((nil))
+debug3: send packet: type 5
+debug3: receive packet: type 6
+debug2: service_accept: ssh-userauth
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug3: send packet: type 50
+debug3: receive packet: type 6
+debug2: service_accept: ssh-userauth
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug3: send packet: type 50
+debug3: receive packet: type 51
+debug1: Authentications that can continue: publickey
+debug3: receive packet: type 51
+debug1: Authentications that can continue: publickey
+debug3: start over, passed a different list publickey
+debug3: preferred gssapi-keyex,gssapi-with-mic,publickey,keyboard-interactive,password
+debug3: authmethod_lookup publickey
+debug3: remaining preferred: keyboard-interactive,password
+debug3: authmethod_is_enabled publickey
+debug1: Next authentication method: publickey
+debug1: Offering RSA public key: /home/lionseun/.ssh/id_rsa
+debug3: send_pubkey_test
+debug3: send packet: type 50
+debug3: start over, passed a different list publickey
+debug3: preferred gssapi-keyex,gssapi-with-mic,publickey,keyboard-interactive,password
+debug3: authmethod_lookup publickey
+debug3: remaining preferred: keyboard-interactive,password
+debug3: authmethod_is_enabled publickey
+debug1: Next authentication method: publickey
+debug1: Offering RSA public key: /home/lionseun/.ssh/id_rsa
+debug3: send_pubkey_test
+debug3: send packet: type 50
+debug2: we sent a publickey packet, wait for reply
+debug2: we sent a publickey packet, wait for reply
+debug3: receive packet: type 60
+debug3: receive packet: type 60
+debug1: Server accepts key: pkalg ssh-rsa blen 535
+debug1: Server accepts key: pkalg ssh-rsa blen 535
+debug2: input_userauth_pk_ok: fp SHA256:kJ0qLUnwh+w3wzGB30YQnLY6r1Ofa5Yb7YGct/MbkqU
+debug2: input_userauth_pk_ok: fp SHA256:kJ0qLUnwh+w3wzGB30YQnLY6r1Ofa5Yb7YGct/MbkqU
+debug3: sign_and_send_pubkey: RSA SHA256:kJ0qLUnwh+w3wzGB30YQnLY6r1Ofa5Yb7YGct/MbkqU
+debug3: sign_and_send_pubkey: RSA SHA256:kJ0qLUnwh+w3wzGB30YQnLY6r1Ofa5Yb7YGct/MbkqU
+debug3: send packet: type 50
+debug3: send packet: type 50
+debug3: receive packet: type 52
+debug1: Authentication succeeded (publickey).
+Authenticated to github.com ([192.30.255.112]:22).
+debug2: fd 7 setting O_NONBLOCK
+debug1: channel 0: new [client-session]
+debug3: ssh_session2_open: channel_new: 0
+debug2: channel 0: send open
+debug3: send packet: type 90
+debug1: Entering interactive session.
+debug1: pledge: network
+debug3: receive packet: type 52
+debug1: Authentication succeeded (publickey).
+Authenticated to github.com ([192.30.255.112]:22).
+debug2: fd 7 setting O_NONBLOCK
+debug1: channel 0: new [client-session]
+debug3: ssh_session2_open: channel_new: 0
+debug2: channel 0: send open
+debug3: send packet: type 90
+debug1: Entering interactive session.
+debug1: pledge: network
+debug3: receive packet: type 91
+debug2: callback start
+debug2: fd 3 setting TCP_NODELAY
+debug3: ssh_packet_set_tos: set IP_TOS 0x08
+debug3: receive packet: type 91
+debug2: callback start
+debug2: fd 3 setting TCP_NODELAY
+debug3: ssh_packet_set_tos: set IP_TOS 0x08
+debug2: client_session2_setup: id 0
+debug1: Sending environment.
+debug3: Ignored env XDG_SESSION_ID
+debug1: Sending env LC_IDENTIFICATION = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: Ignored env DISPLAY
+debug3: Ignored env SDKMAN_CURRENT_API
+debug3: Ignored env SDKMAN_LEGACY_API
+debug3: Ignored env GNOME_KEYRING_CONTROL
+debug3: Ignored env DEFAULTS_PATH
+debug3: Ignored env LOGNAME
+debug3: Ignored env USE_CCACHE
+debug2: client_session2_setup: id 0
+debug1: Sending environment.
+debug3: Ignored env XDG_SESSION_ID
+debug1: Sending env LC_IDENTIFICATION = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: Ignored env DISPLAY
+debug3: Ignored env SDKMAN_CURRENT_API
+debug3: Ignored env SDKMAN_LEGACY_API
+debug3: Ignored env GNOME_KEYRING_CONTROL
+debug3: Ignored env DEFAULTS_PATH
+debug3: Ignored env LOGNAME
+debug3: Ignored env USE_CCACHE
+debug3: Ignored env SHELL
+debug1: Sending env LC_NUMERIC = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: Ignored env SHELL
+debug1: Sending env LC_NUMERIC = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: Ignored env IM_CONFIG_PHASE
+debug3: Ignored env XMODIFIERS
+debug3: Ignored env IM_CONFIG_PHASE
+debug3: Ignored env XMODIFIERS
+debug3: Ignored env SESSION
+debug3: Ignored env XDG_MENU_PREFIX
+debug3: Ignored env XDG_SESSION_DESKTOP
+debug3: Ignored env GDMSESSION
+debug3: Ignored env SESSION
+debug3: Ignored env XDG_MENU_PREFIX
+debug3: Ignored env XDG_SESSION_DESKTOP
+debug3: Ignored env GDMSESSION
+debug1: Sending env LC_MEASUREMENT = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug1: Sending env LC_ADDRESS = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug1: Sending env LC_MEASUREMENT = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug1: Sending env LC_ADDRESS = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: Ignored env UPSTART_SESSION
+debug3: Ignored env XDG_CONFIG_DIRS
+debug3: Ignored env UPSTART_SESSION
+debug3: Ignored env XDG_CONFIG_DIRS
+debug3: Ignored env DESKTOP_SESSION
+debug3: Ignored env GTK_IM_MODULE
+debug3: Ignored env DESKTOP_SESSION
+debug3: Ignored env GTK_IM_MODULE
+debug3: Ignored env USER
+debug3: Ignored env USER
+debug1: Sending env LC_MONETARY = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug1: Sending env LC_MONETARY = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: send packet: type 98
+debug3: Ignored env QT_ACCESSIBILITY
+debug3: Ignored env QT_ACCESSIBILITY
+debug3: Ignored env DESKTOP_AUTOSTART_ID
+debug3: Ignored env DESKTOP_AUTOSTART_ID
+debug3: Ignored env LANGUAGE
+debug3: Ignored env LANGUAGE
+debug1: Sending env LANG = en_US.UTF-8
+debug1: Sending env LANG = en_US.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: Ignored env SDKMAN_CANDIDATES_DIR
+debug3: Ignored env SDKMAN_CANDIDATES_DIR
+debug3: Ignored env GPG_AGENT_INFO
+debug3: Ignored env XDG_VTNR
+debug3: Ignored env GPG_AGENT_INFO
+debug3: Ignored env XDG_VTNR
+debug3: Ignored env SESSIONTYPE
+debug3: Ignored env DBUS_SESSION_BUS_ADDRESS
+debug3: Ignored env GNOME_KEYRING_PID
+debug3: Ignored env SESSIONTYPE
+debug3: Ignored env DBUS_SESSION_BUS_ADDRESS
+debug3: Ignored env GNOME_KEYRING_PID
+debug1: Sending env LC_TELEPHONE = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug1: Sending env LC_TELEPHONE = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: send packet: type 98
+debug3: Ignored env CLUTTER_IM_MODULE
+debug3: Ignored env CLUTTER_IM_MODULE
+debug3: Ignored env GIO_LAUNCHED_DESKTOP_FILE
+debug3: Ignored env GIO_LAUNCHED_DESKTOP_FILE_PID
+debug3: Ignored env GNOME_DESKTOP_SESSION_ID
+debug3: Ignored env GIO_LAUNCHED_DESKTOP_FILE
+debug3: Ignored env GIO_LAUNCHED_DESKTOP_FILE_PID
+debug3: Ignored env GNOME_DESKTOP_SESSION_ID
+debug3: Ignored env GOPATH
+debug3: Ignored env GOROOT
+debug3: Ignored env GOPATH
+debug3: Ignored env GOROOT
+debug3: Ignored env GTK2_MODULES
+debug3: Ignored env GTK_MODULES
+debug3: Ignored env GUAKE_TAB_UUID
+debug3: Ignored env GTK2_MODULES
+debug3: Ignored env GTK_MODULES
+debug3: Ignored env GUAKE_TAB_UUID
+debug3: Ignored env HOME
+debug3: Ignored env INSTANCE
+debug3: Ignored env JOB
+debug3: Ignored env HOME
+debug3: Ignored env INSTANCE
+debug3: Ignored env JOB
+debug1: Sending env LC_NAME = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug1: Sending env LC_PAPER = zh_CN.UTF-8
+debug1: Sending env LC_NAME = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug1: Sending env LC_PAPER = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug1: Sending env LC_TIME = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug1: Sending env LC_TIME = zh_CN.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: Ignored env MANDATORY_PATH
+debug3: Ignored env PATH
+debug3: Ignored env PWD
+debug3: Ignored env MANDATORY_PATH
+debug3: Ignored env PATH
+debug3: Ignored env PWD
+debug3: Ignored env QT4_IM_MODULE
+debug3: Ignored env QT_IM_MODULE
+debug3: Ignored env QT_LINUX_ACCESSIBILITY_ALWAYS_ON
+debug3: Ignored env SDKMAN_DIR
+debug3: Ignored env SDKMAN_PLATFORM
+debug3: Ignored env SDKMAN_VERSION
+debug3: Ignored env SESSION_MANAGER
+debug3: Ignored env SHLVL
+debug3: Ignored env SSH_AUTH_SOCK
+debug3: Ignored env QT4_IM_MODULE
+debug3: Ignored env QT_IM_MODULE
+debug3: Ignored env QT_LINUX_ACCESSIBILITY_ALWAYS_ON
+debug3: Ignored env SDKMAN_DIR
+debug3: Ignored env SDKMAN_PLATFORM
+debug3: Ignored env SDKMAN_VERSION
+debug3: Ignored env SESSION_MANAGER
+debug3: Ignored env SHLVL
+debug3: Ignored env SSH_AUTH_SOCK
+debug3: Ignored env TERM
+debug3: Ignored env TMUX
+debug3: Ignored env TMUX_PANE
+debug3: Ignored env USERNAME
+debug3: Ignored env WINDOWPATH
+debug3: Ignored env TERM
+debug3: Ignored env TMUX
+debug3: Ignored env TMUX_PANE
+debug3: Ignored env USERNAME
+debug3: Ignored env WINDOWPATH
+debug3: Ignored env XAUTHORITY
+debug3: Ignored env XDG_CURRENT_DESKTOP
+debug3: Ignored env XAUTHORITY
+debug3: Ignored env XDG_CURRENT_DESKTOP
+debug3: Ignored env XDG_DATA_DIRS
+debug3: Ignored env XDG_RUNTIME_DIR
+debug3: Ignored env XDG_DATA_DIRS
+debug3: Ignored env XDG_RUNTIME_DIR
+debug3: Ignored env XDG_SEAT
+debug3: Ignored env XDG_SESSION_TYPE
+debug3: Ignored env OLDPWD
+debug3: Ignored env XDG_SEAT
+debug3: Ignored env XDG_SESSION_TYPE
+debug3: Ignored env OLDPWD
+debug3: Ignored env ZSH
+debug3: Ignored env ANDROID_HOME
+debug3: Ignored env PAGER
+debug3: Ignored env ZSH
+debug3: Ignored env ANDROID_HOME
+debug3: Ignored env PAGER
+debug3: Ignored env LESS
+debug1: Sending env LC_CTYPE = en_US.UTF-8
+debug3: Ignored env LESS
+debug1: Sending env LC_CTYPE = en_US.UTF-8
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug2: channel 0: request env confirm 0
+debug3: send packet: type 98
+debug3: Ignored env LSCOLORS
+debug3: Ignored env LSCOLORS
+debug3: Ignored env LS_COLORS
+debug3: Ignored env LS_COLORS
+debug3: Ignored env ZSH_TMUX_TERM
+debug3: Ignored env _ZSH_TMUX_FIXED_CONFIG
+debug3: Ignored env ZSH_TMUX_TERM
+debug3: Ignored env _ZSH_TMUX_FIXED_CONFIG
+debug3: Ignored env EDITOR
+debug3: Ignored env SSH_KEY_PATH
+debug3: Ignored env EDITOR
+debug3: Ignored env SSH_KEY_PATH
+debug3: Ignored env KOTLIN_HOME
+debug3: Ignored env _
+debug3: Ignored env KOTLIN_HOME
+debug3: Ignored env _
+debug2: channel 0: request shell confirm 1
+debug3: send packet: type 98
+debug2: channel 0: request shell confirm 1
+debug3: send packet: type 98
+debug2: callback done
+debug2: callback done
+debug2: channel 0: open confirm rwindow 32000 rmax 35000
+debug2: channel 0: open confirm rwindow 32000 rmax 35000
+debug3: receive packet: type 99
+debug2: channel_input_status_confirm: type 99 id 0
+debug2: shell request accepted on channel 0
+debug3: receive packet: type 99
+debug2: channel_input_status_confirm: type 99 id 0
+debug2: shell request accepted on channel 0
+debug2: channel 0: rcvd ext data 87
+debug3: receive packet: type 98
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug3: receive packet: type 96
+debug2: channel 0: rcvd eof
+debug2: channel 0: output open -> drain
+debug3: receive packet: type 97
+debug2: channel 0: rcvd ext data 87
+debug3: receive packet: type 98
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug3: receive packet: type 96
+debug2: channel 0: rcvd eof
+debug2: channel 0: output open -> drain
+debug3: receive packet: type 97
+debug2: channel 0: rcvd close
+debug2: channel 0: close_read
+debug2: channel 0: input open -> closed
+debug3: channel 0: will not send data after close
+debug2: channel 0: obuf_empty delayed efd 7/(87)
+Hi L-ios! You've successfully authenticated, but GitHub does not provide shell access.
+debug2: channel 0: written 87 to efd 7
+debug2: channel 0: rcvd close
+debug2: channel 0: close_read
+debug2: channel 0: input open -> closed
+debug3: channel 0: will not send data after close
+debug2: channel 0: obuf_empty delayed efd 7/(87)
+Hi L-ios! You've successfully authenticated, but GitHub does not provide shell access.
+debug2: channel 0: written 87 to efd 7
+debug3: channel 0: will not send data after close
+debug2: channel 0: obuf empty
+debug2: channel 0: close_write
+debug2: channel 0: output drain -> closed
+debug2: channel 0: almost dead
+debug2: channel 0: gc: notify user
+debug2: channel 0: gc: user detached
+debug2: channel 0: send close
+debug3: send packet: type 97
+debug3: channel 0: will not send data after close
+debug2: channel 0: obuf empty
+debug2: channel 0: close_write
+debug2: channel 0: output drain -> closed
+debug2: channel 0: almost dead
+debug2: channel 0: gc: notify user
+debug2: channel 0: gc: user detached
+debug2: channel 0: send close
+debug3: send packet: type 97
+debug2: channel 0: is dead
+debug2: channel 0: garbage collecting
+debug2: channel 0: is dead
+debug2: channel 0: garbage collecting
+debug1: channel 0: free: client-session, nchannels 1
+debug1: channel 0: free: client-session, nchannels 1
+debug3: channel 0: status: The following connections are open:
+  #0 client-session (t4 r43 i3/0 o3/0 fd -1/-1 cc -1)
+
+debug3: channel 0: status: The following connections are open:
+  #0 client-session (t4 r43 i3/0 o3/0 fd -1/-1 cc -1)
+
+debug3: send packet: type 1
+debug1: fd 2 clearing O_NONBLOCK
+Transferred: sent 3932, received 2032 bytes, in 0.8 seconds
+Bytes per second: sent 4748.7, received 2454.0
+debug3: send packet: type 1
+debug1: fd 2 clearing O_NONBLOCK
+Transferred: sent 3932, received 2032 bytes, in 0.8 seconds
+Bytes per second: sent 4748.7, received 2454.0
+debug1: Exit status 1
+debug1: Exit status 1

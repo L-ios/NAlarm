@@ -117,7 +117,7 @@ public final class AlarmContract {
          * Days of the week encoded as a bit set.
          * <p>Type: INTEGER</p>
          *
-         * {@link com.android.deskclock.data.Weekdays}
+         * {@link com.lionseun.lib8.nalarm.Weekdays}
          */
         String DAYS_OF_WEEK = "daysofweek";
 
