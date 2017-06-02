@@ -100,7 +100,7 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
         LogUtils.i("Instance table created");
     }
 
-    public ClockDatabaseHelper(Context context) {
+    public AlarmDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_8);
     }
 

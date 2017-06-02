@@ -4,4 +4,10 @@
     <string name="settings">设置</string>
     <string name="about">关于</string>
     <string name="title_activity_about">关于闹闹铃声</string>
+    <string name="vibrate_label">震动</string>
+    <string name="alarm_repeat_label">重复</string>
+    <string name="alarm_sound">无铃声</string>
+    <string name="alarm_label_hint">标签</string>
+    <string name="alarm_name_hint">名称</string>
+    <string name="ring_label">闹铃铃声</string>
 </resources>

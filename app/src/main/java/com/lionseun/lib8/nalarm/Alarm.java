@@ -383,14 +383,15 @@ public final class Alarm implements Parcelable, AlarmContract.AlarmsColumns {
         return 0;
     }
 
-    public AlarmInstance createInstanceAfter(Calendar time) {
-        Calendar nextInstanceTime = getNextAlarmTime(time);
-        AlarmInstance result = new AlarmInstance(nextInstanceTime, id);
-        result.mVibrate = vibrate;
-        result.mLabel = label;
-        result.mRingtone = alert;
-        return result;
-    }
+    // TODO: 6/2/17 AlarmInstance 
+//    public AlarmInstance createInstanceAfter(Calendar time) {
+//        Calendar nextInstanceTime = getNextAlarmTime(time);
+//        AlarmInstance result = new AlarmInstance(nextInstanceTime, id);
+//        result.mVibrate = vibrate;
+//        result.mLabel = label;
+//        result.mRingtone = alert;
+//        return result;
+//    }
 
     /**
      *

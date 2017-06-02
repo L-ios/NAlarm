@@ -8,12 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="android:screenOrientation">portrait</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.Settings" parent="AppTheme.NoActionBar">
+    </style>
+    
+    <style name="AppTheme.AlarmInfo" parent="AppTheme.NoActionBar">
+        <item name="editTextStyle">@style/AlarmInfoEditText</item>
+        <item name="android:textViewStyle">@style/AlarmInfoTextView</item>
     </style>
 
 
@@ -23,11 +29,16 @@
 
     <style name="AppTheme.Settings.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
     </style>
-    
 
-    <style name="no_alarms">
-        <item name="android:textSize">@dimen/no_alarm_font_size</item>
-        <item name="android:textColor">@color/white_63p</item>
+    
+    <style name="AlarmInfoEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="AlarmInfoTextView">
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 
