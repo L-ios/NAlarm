@@ -188,7 +188,7 @@ public final class Weekdays {
      *      which is always between 1 and 7 inclusive; {@code -1} if no weekdays are enabled
      */
     public int getDistanceToPreviousDay(Calendar time) {
-        int calendarDay = time.get(DAY_OF_WEEK);
+        int calendarDay = time.get(Calendar.DAY_OF_WEEK);
         for (int count = 1; count <= 7; count++) {
             calendarDay--;
             if (calendarDay < Calendar.SUNDAY) {

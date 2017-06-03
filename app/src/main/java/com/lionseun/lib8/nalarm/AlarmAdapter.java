@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.TimeUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lingyang on 6/1/17.
@@ -18,12 +22,12 @@ import android.widget.TextView;
 public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
-    private String[] mTitles;
+    private List<AlarmInfo> mAlarmInfoList;
 
     public AlarmAdapter(Context context) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
-        mTitles = mContext.getResources().getStringArray(R.array.demo_titles);
+        mAlarmInfoList = new ArrayList<>();
     }
 
     @Override
@@ -38,7 +42,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mTitles == null ? 0 : mTitles.length;
+        return mAlarmInfoList == null ? 0 : mAlarmInfoList.size();
     }
 
     public void startAlarmInfoActivity() {
@@ -75,6 +79,22 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 AlarmAdapter.this.startAlarmInfoActivity();
                 return true;
             });
+        }
+        
+        private void updateAlarmInfo(AlarmInfo info) {
+            if (info == null) {
+                return;
+            }
+            // TODO: 6/3/17 build picture 
+            //mAlarmIcon.setImageURI(info.);
+            // TODO: 6/3/17 update time show 
+            mAlarmTime.setText("" + info.hour + " : " + info.minutes);
+            mAlarmNote.setText(info.label);
+            mAlarmSwitch.setChecked(info.enabled);
+            // TODO: 6/3/17 repeat text 
+            mAlarmRptInfo.setText("TODO");
+            // TODO: 6/3/17 ring text 
+            mAlarmRing.setText("TODO");
         }
 
         /**

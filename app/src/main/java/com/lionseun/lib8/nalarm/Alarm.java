@@ -55,7 +55,6 @@ public final class Alarm implements Parcelable, AlarmContract.AlarmsColumns {
             VIBRATE,
             LABEL,
             RINGTONE,
-            DELETE_AFTER_USE
     };
 
     private static final String[] QUERY_ALARMS_WITH_INSTANCES_COLUMNS = {
@@ -67,17 +66,6 @@ public final class Alarm implements Parcelable, AlarmContract.AlarmsColumns {
             AlarmDatabaseHelper.ALARMS_TABLE_NAME + "." + VIBRATE,
             AlarmDatabaseHelper.ALARMS_TABLE_NAME + "." + LABEL,
             AlarmDatabaseHelper.ALARMS_TABLE_NAME + "." + RINGTONE,
-            AlarmDatabaseHelper.ALARMS_TABLE_NAME + "." + DELETE_AFTER_USE,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "."
-                    + AlarmContract.InstancesColumns.ALARM_STATE,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "." + AlarmContract.InstancesColumns._ID,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "." + AlarmContract.InstancesColumns.YEAR,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "." + AlarmContract.InstancesColumns.MONTH,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "." + AlarmContract.InstancesColumns.DAY,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "." + AlarmContract.InstancesColumns.HOUR,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "." + AlarmContract.InstancesColumns.MINUTES,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "." + AlarmContract.InstancesColumns.LABEL,
-            AlarmDatabaseHelper.INSTANCES_TABLE_NAME + "." + AlarmContract.InstancesColumns.VIBRATE
     };
 
     /**
@@ -118,7 +106,6 @@ public final class Alarm implements Parcelable, AlarmContract.AlarmsColumns {
         values.put(DAYS_OF_WEEK, alarm.daysOfWeek.getBits());
         values.put(VIBRATE, alarm.vibrate ? 1 : 0);
         values.put(LABEL, alarm.label);
-        values.put(DELETE_AFTER_USE, alarm.deleteAfterUse);
         if (alarm.alert == null) {
             // We want to put null, so default alarm changes
             values.putNull(RINGTONE);
@@ -148,7 +135,7 @@ public final class Alarm implements Parcelable, AlarmContract.AlarmsColumns {
      * @return cursor loader with all the alarms.
      */
     public static CursorLoader getAlarmsCursorLoader(Context context) {
-        return new CursorLoader(context, ALARMS_WITH_INSTANCES_URI,
+        return new CursorLoader(context, CONTENT_URI,
                 QUERY_ALARMS_WITH_INSTANCES_COLUMNS, null, null, DEFAULT_SORT_ORDER) {
             @Override
             public void onContentChanged() {
