@@ -23,9 +23,13 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
     public Uri alert;
 
     AlarmInfo(String name, int hour, int minutes) {
+        // TODO: 17-6-5 need fixed 
         this.name = name;
         this.hour = hour;
         this.minutes = minutes;
+        enabled = false;
+        daysOfWeek = Weekdays.fromCalendarDays(3);
+        label = "";
     }
     
     AlarmInfo(Cursor c) {
@@ -89,7 +93,7 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
-        values.put(NAME, name);
+        values.put(NAME, name == null? "": name);
         values.put(ENABLED, enabled);
         values.put(HOUR, hour);
         values.put(MINUTES, minutes);

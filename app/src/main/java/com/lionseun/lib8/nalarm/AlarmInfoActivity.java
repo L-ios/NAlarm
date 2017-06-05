@@ -142,11 +142,17 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
 
     private void updateSound(Uri soundName) {
         // TODO: 17-6-5 alarm sound
+        if (soundName == null) {
+            return;
+        }
         mAlarmSound.setText(soundName.toString());
     }
 
     private void updateRepeat(Weekdays daysOfWeek) {
         // TODO: 17-6-5 repeat
+        if (daysOfWeek == null) {
+            return;
+        }
         mRepeat.setText(daysOfWeek.toString());
     }
 
