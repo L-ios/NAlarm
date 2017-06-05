@@ -38,8 +38,21 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        // 用于数据和单个view的绑ListView中Adapter的getView
+        // TODO: 6/5/17 改善view的监听 
+        ((AlarmInfoViewHolder)viewHolder).updateAlarmInfo(mAlarmInfoList.get(position));
     }
 
+    public AlarmAdapter setItemInfos(List<AlarmInfo> alarmInfoList) {
+        List<AlarmInfo> oldAlarmInfoList = mAlarmInfoList;
+        if (oldAlarmInfoList != alarmInfoList) {
+            mAlarmInfoList = alarmInfoList;
+            notifyDataSetChanged();
+        }
+        return this;
+    }
+    
+    
     @Override
     public int getItemCount() {
         return mAlarmInfoList == null ? 0 : mAlarmInfoList.size();

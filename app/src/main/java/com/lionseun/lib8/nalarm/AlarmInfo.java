@@ -1,5 +1,6 @@
 package com.lionseun.lib8.nalarm;
 
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -24,6 +25,10 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         this.name = name;
         this.hour = hour;
         this.minutes = minutes;
+    }
+    
+    AlarmInfo(Cursor c) {
+        // TODO: 6/5/17 build alarminfo by Cursor 
     }
     
     protected AlarmInfo(Parcel in) {
