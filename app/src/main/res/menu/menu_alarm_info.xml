@@ -5,7 +5,7 @@
     <item
         android:id="@+id/save_alarm"
         android:checkable="false"
-        android:icon="@drawable/ic_group_collapse_14"
+        android:icon="@drawable/ic_done_black_24dp"
         android:title="Save Alarm"
         app:showAsAction="always"/>
     
