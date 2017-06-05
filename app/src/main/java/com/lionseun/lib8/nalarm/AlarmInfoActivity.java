@@ -1,28 +1,32 @@
 package com.lionseun.lib8.nalarm;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class AlarmInfoActivity extends AppCompatActivity {
+import java.util.Calendar;
+
+public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
     private AlarmInfo mAlarmInfo;
-    private boolean isSave = false;
-    
+
     private TextView mAlarmName;
     private TextView mAlarmTime;
-    private TextView mHour;
-    private TextView mMinutes;
     private EditText mLabel;
     private CheckBox mEnable;
     private TextView mAlarmSound;
@@ -40,7 +44,11 @@ public class AlarmInfoActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        
+
+        final Calendar now = Calendar.getInstance();
+        // TODO: 17-6-5 need some list to alarm name.
+        mAlarmInfo = new AlarmInfo(null, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
+
         mAlarmName = (TextView) findViewById(R.id.alarm_name);
         mAlarmTime = (TextView) findViewById(R.id.alarm_time);
         mAlarmTime.setOnClickListener((v) -> {
@@ -52,15 +60,7 @@ public class AlarmInfoActivity extends AppCompatActivity {
             } else {
                 
             }
-            TimePickerDialog timePickDialog = new TimePickerDialog(AlarmInfoActivity.this, null, hourOfDay, minute, true);
-            timePickDialog.setButton(Dialog.BUTTON_POSITIVE, "null, todo", (dialog, which) -> {
-                if (which == Dialog.BUTTON_POSITIVE) {
-                    // TODO: 6/5/17 update time , hour and minutes 
-                    Toast.makeText(AlarmInfoActivity.this, "获取时间", Toast.LENGTH_LONG).show();
-                    
-                    updateActivity();
-                }
-            });
+            TimePickerDialog timePickDialog = new TimePickerDialog(AlarmInfoActivity.this, this, hourOfDay, minute, true);
             timePickDialog.setCancelable(false);
             timePickDialog.show();
         });
@@ -73,22 +73,16 @@ public class AlarmInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (isSave) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.setMessage(R.string.alarm_quit_message);
+        builder.setNegativeButton(android.R.string.ok, (dialog, which) -> {
             finish();
-        } else {
-            // TODO feature: 6/1/17 阻止退出，提示是否保存铃声 
-            Toast.makeText(this, "完成未保存", Toast.LENGTH_LONG).show();
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("todo title");
-            builder.setMessage("todo message builder");
-            builder.setNegativeButton("todo message buttong", (dialog, which) -> {
-                finish();
-            });
-            builder.setPositiveButton("todo positive buuton", (dialog, which) -> {
-                dialog.dismiss();
-            });
-            builder.create().show();
-        }
+        });
+        builder.setPositiveButton(android.R.string.cancel, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.create().show();
         return super.onSupportNavigateUp();
     }
 
@@ -109,10 +103,17 @@ public class AlarmInfoActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.save_alarm: {
-                Toast.makeText(this, "完善 Save Alarm", Toast.LENGTH_LONG).show();
-                // TODO: 6/5/17 insert data to database 
-                isSave = true;
-                finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(android.R.string.dialog_alert_title);
+                builder.setMessage(R.string.alarm_save_message);
+                builder.setNegativeButton(android.R.string.ok, (dialog, which) -> {
+                    saveAlarmInfo();
+                    finish();
+                });
+                builder.setPositiveButton(android.R.string.cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                builder.create().show();
                 return true;
             }
             case R.id.abandon_alarm: {
@@ -126,17 +127,67 @@ public class AlarmInfoActivity extends AppCompatActivity {
     
     public void updateActivity() {
         if (mAlarmInfo != null) {
+            mAlarmName.setText(mAlarmInfo.name);
+            updateTime(mAlarmInfo.hour, mAlarmInfo.minutes);
+            mLabel.setText(mAlarmInfo.label);
+            updateSound(mAlarmInfo.alert);
+            updateRepeat(mAlarmInfo.daysOfWeek);
             mEnable.setChecked(mAlarmInfo.enabled);
         }
-        
     }
-    
+
+    private void updateTime(int hourOfDay, int minute) {
+        mAlarmTime.setText("" + hourOfDay + " : " + minute);
+    }
+
+    private void updateSound(Uri soundName) {
+        // TODO: 17-6-5 alarm sound
+        mAlarmSound.setText(soundName.toString());
+    }
+
+    private void updateRepeat(Weekdays daysOfWeek) {
+        // TODO: 17-6-5 repeat
+        mRepeat.setText(daysOfWeek.toString());
+    }
+
     public void saveAlarmInfo() {
         if (mAlarmInfo == null) {
-            String time = (String) mAlarmTime.getText();
-            mAlarmInfo = new AlarmInfo((String)mAlarmName.getText(), 0, 0);
+            final Calendar now = Calendar.getInstance();
+            // TODO: 17-6-5 need some list to alarm name.
+            mAlarmInfo = new AlarmInfo(null, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
         }
-        // TODO: 6/5/17 get all info 
-        
+        // TODO: 6/5/17 get all info
+        asyncAddAlarmInfo(mAlarmInfo);
     }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        if (mAlarmInfo != null) {
+            mAlarmInfo.hour = hourOfDay;
+            mAlarmInfo.minutes = minute;
+        }
+        updateActivity();
+    }
+
+    public void asyncAddAlarmInfo(final AlarmInfo alarmInfo) {
+        // TODO: 17-6-5 temper for here
+        final AsyncTask<Void, Void, Object> updateTask = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                ContentResolver cr = getApplication().getContentResolver();
+                ContentValues values = alarmInfo.toContentValues();
+                Uri uri = cr.insert(AlarmContract.AlarmsColumns.CONTENT_URI, values);
+                ContentUris.parseId(uri);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                Toast.makeText(getApplicationContext(), "todo 添加alarmInfo成功", Toast.LENGTH_LONG).show();
+            }
+        };
+        updateTask.execute();
+    }
+
+
 }

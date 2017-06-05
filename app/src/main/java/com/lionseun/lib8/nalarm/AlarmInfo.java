@@ -1,5 +1,6 @@
 package com.lionseun.lib8.nalarm;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
@@ -84,5 +85,22 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
                 ", label='" + label + '\"' +
                 ", alert=" + alert +
                 '}';
+    }
+
+    public ContentValues toContentValues() {
+        ContentValues values = new ContentValues();
+        values.put(NAME, name);
+        values.put(ENABLED, enabled);
+        values.put(HOUR, hour);
+        values.put(MINUTES, minutes);
+        values.put(DAYS_OF_WEEK, daysOfWeek.getBits());
+        values.put(VIBRATE, vibrate ? 1 : 0);
+        values.put(LABEL, label);
+        if (alert == null) {
+            values.putNull(RINGTONE);
+        } else {
+            values.put(RINGTONE, alert.toString());
+        }
+        return values;
     }
 }

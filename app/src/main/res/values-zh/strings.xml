@@ -10,4 +10,6 @@
     <string name="alarm_label_hint">标签</string>
     <string name="alarm_name_hint">名称</string>
     <string name="ring_label">闹铃铃声</string>
+    <string name="alarm_quit_message">不保存?</string>
+    <string name="alarm_save_message">保存并退出?</string>
 </resources>
