@@ -35,10 +35,10 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
 
     // This creates a default alarm at 8:30 for every Mon,Tue,Wed,Thu,Fri
     // TODO: 6/3/17 change this test data, alarm 1 and alarm 2 
-    private static final String DEFAULT_ALARM_1 = "(8, 30, 31, 0, 1, '', NULL, 0);";
+    private static final String DEFAULT_ALARM_1 = "('get up', 8, 30, 31, 0, 1, '', NULL);";
 
     // This creates a default alarm at 9:30 for every Sat,Sun
-    private static final String DEFAULT_ALARM_2 = "(9, 00, 96, 0, 1, '', NULL, 0);";
+    private static final String DEFAULT_ALARM_2 = "('work', 9, 00, 96, 0, 1, '', NULL);";
 
     // Database and table names
     static final String DATABASE_NAME = "alarms.db";
@@ -47,6 +47,7 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
     private static void createAlarmsTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + ALARMS_TABLE_NAME + " (" +
                 AlarmContract.AlarmsColumns._ID + " INTEGER PRIMARY KEY," +
+                AlarmContract.AlarmsColumns.NAME + " TEXT NOT NULL, " +
                 AlarmContract.AlarmsColumns.HOUR + " INTEGER NOT NULL, " +
                 AlarmContract.AlarmsColumns.MINUTES + " INTEGER NOT NULL, " +
                 AlarmContract.AlarmsColumns.DAYS_OF_WEEK + " INTEGER NOT NULL, " +
@@ -69,13 +70,14 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
         LogUtils.i("Inserting default alarms");
         String cs = ", "; //comma and space
         String insertMe = "INSERT INTO " + ALARMS_TABLE_NAME + " (" +
+                AlarmContract.AlarmsColumns.NAME + cs +
                 AlarmContract.AlarmsColumns.HOUR + cs +
                 AlarmContract.AlarmsColumns.MINUTES + cs +
                 AlarmContract.AlarmsColumns.DAYS_OF_WEEK + cs +
                 AlarmContract.AlarmsColumns.ENABLED + cs +
                 AlarmContract.AlarmsColumns.VIBRATE + cs +
                 AlarmContract.AlarmsColumns.LABEL + cs +
-                AlarmContract.AlarmsColumns.RINGTONE + cs + ") VALUES ";
+                AlarmContract.AlarmsColumns.RINGTONE +  ") VALUES ";
         db.execSQL(insertMe + DEFAULT_ALARM_1);
         db.execSQL(insertMe + DEFAULT_ALARM_2);
     }
@@ -86,6 +88,7 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
     }
 
     long fixAlarmInsert(ContentValues values) {
+        // TODO: 6/5/17 need fixed this method 
         // Why are we doing this? Is this not a programming bug if we try to
         // insert an already used id?
         final SQLiteDatabase db = getWritableDatabase();

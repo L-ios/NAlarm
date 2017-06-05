@@ -32,6 +32,11 @@
             android:label="@string/about"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        
+        <provider
+            android:authorities="com.lionseun.lib8.nalarm"
+            android:directBootAware="true"
+            android:name=".AlarmProvider" />
     </application>
 
 </manifest>

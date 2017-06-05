@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mAlarmRecyclerView = (RecyclerView) findViewById(R.id.alarms_recycler_view);
         mAlarmRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAlarmRecyclerView.setAdapter(new AlarmAdapter(this));
+        getLoaderManager().initLoader(0, null, this);
     }
     
     private void editAlarmInfo(AlarmInfo alarmInfo) {
@@ -82,13 +83,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // TODO: 6/3/17 onCreateLoaser 
-        return null;
+        return AlarmLoader.getAlarmsCursorLoader(this);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // TODO: 6/3/17 onLoadFinished 
+        // 加载完成后的操作
     }
 
     @Override
