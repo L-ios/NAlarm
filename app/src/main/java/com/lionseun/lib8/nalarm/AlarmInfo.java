@@ -38,7 +38,7 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         this.hour = hour;
         this.minutes = minutes;
         enabled = false;
-        daysOfWeek = Weekdays.fromCalendarDays(3);
+        daysOfWeek = Weekdays.fromBits(0x3ffe);
         label = "";
     }
     
@@ -51,19 +51,20 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         // TODO: 6/6/17 alert to rename ? 
         this.alert = new Uri.Builder().scheme(c.getString(RINGTONE_INDEX)).build();
         this.daysOfWeek = Weekdays.fromBits(c.getInt(DAYS_OF_WEEK_INDEX));
-        this.enabled = c.getInt(ENABLED_INDEX) == 1;
-        this.vibrate = c.getInt(VIBRATE_INDEX) == 1;
+        this.enabled = c.getInt(ENABLED_INDEX) != 0;
+        this.vibrate = c.getInt(VIBRATE_INDEX) != 0;
     }
     
     protected AlarmInfo(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
-        this.enabled = in.readByte() != 0;
         this.hour = in.readInt();
         this.minutes = in.readInt();
-        this.vibrate = in.readByte() != 0;
+        this.daysOfWeek = Weekdays.fromBits(in.readInt());
         this.label = in.readString();
         this.alert = in.readParcelable(Uri.class.getClassLoader());
+        this.enabled = in.readByte() != 0;
+        this.vibrate = in.readByte() != 0;
     }
 
     public static final Creator<AlarmInfo> CREATOR = new Creator<AlarmInfo>() {
@@ -87,12 +88,13 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
         dest.writeString(this.name);
-        dest.writeByte((byte) (this.enabled ? 1 : 0));
         dest.writeInt(this.hour);
         dest.writeInt(this.minutes);
-        dest.writeByte((byte) (this.vibrate ? 1 : 0));
+        dest.writeInt(this.daysOfWeek.getBits());
         dest.writeString(this.label);
         dest.writeParcelable(this.alert, flags);
+        dest.writeByte((byte) (this.enabled ? 1 : 0));
+        dest.writeByte((byte) (this.vibrate ? 1 : 0));
     }
 
     @Override
@@ -100,13 +102,13 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         return "Alarm{" +
                 "id=" + id +
                 ", name=\"" + name + '\"' +
-                ", enabled=" + enabled +
                 ", hour=" + hour +
                 ", minutes=" + minutes +
                 ", daysOfWeek=" + daysOfWeek +
-                ", vibrate=" + vibrate +
                 ", label='" + label + '\"' +
                 ", alert=" + alert +
+                ", enabled=" + enabled +
+                ", vibrate=" + vibrate +
                 '}';
     }
 
