@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
@@ -35,7 +34,8 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     private CheckBox mEnable;
     private TextView mAlarmSound;
     private TextView mRepeat;
-    
+    private static final int RESULT_RINGTONE = 0x2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO: 6/6/17 先选择时间 
@@ -57,6 +57,7 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         // TODO: 17-6-5 need some list to alarm name.
         if (mAlarmInfo == null) {
             mAlarmInfo = new AlarmInfo(null, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
+            mAlarmInfo.setRingtone(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
         }
 
         mAlarmName = (TextView) findViewById(R.id.alarm_name);
@@ -78,10 +79,43 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         mRepeat = (TextView) findViewById(R.id.alarm_rpt);
         mAlarmSound = (TextView) findViewById(R.id.alarm_sound);
         mAlarmSound.setOnClickListener(v -> {
-            // TODO: 6/6/17 list ringtone 
+            Intent ringtoneIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+//            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, mAlarmInfo.getRingtone());
+            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+            // TODO: 17-6-6 picked ringtone 
+            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI, mAlarmInfo.getRingtone());
+            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+//            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, mAlarmInfo.getRingtone());
+            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "设置闹铃");
+            startActivityForResult(ringtoneIntent, RESULT_RINGTONE);
         });
 
         mEnable = (CheckBox) findViewById(R.id.is_vibrate);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case RESULT_OK:
+            case RESULT_RINGTONE: {
+                if (data == null) {
+                    return;
+                }
+                mAlarmInfo.setRingtone(data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI));
+                updateSound();
+            }
+            case RESULT_CANCELED: {
+                return;
+            }
+            case RESULT_FIRST_USER: {
+                return;
+            }
+            default: {
+                return;
+            }
+        }
     }
 
     @Override
@@ -149,7 +183,7 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             mAlarmName.setText(mAlarmInfo.name);
             updateTime(mAlarmInfo.hour, mAlarmInfo.minutes);
             mLabel.setText(mAlarmInfo.label);
-            updateSound(mAlarmInfo.alert);
+            updateSound(mAlarmInfo.getRingtone());
             updateRepeat(mAlarmInfo.daysOfWeek);
             mEnable.setChecked(mAlarmInfo.enabled);
         }
@@ -164,11 +198,20 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     }
 
     private void updateSound(Uri soundName) {
-        // TODO: 17-6-5 alarm sound
-        if (soundName == null) {
-            return;
+        mAlarmInfo.setRingtone(soundName);
+        updateSound();
+    }
+
+    private void updateSound() {
+        String ringtoneName;
+        Uri ringtoneUri;
+        if(mAlarmInfo.getRingtone() == null) {
+            ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        } else {
+            ringtoneUri = mAlarmInfo.getRingtone();
         }
-        mAlarmSound.setText(soundName.toString());
+        ringtoneName = RingtoneManager.getRingtone(this, ringtoneUri).getTitle(this);
+        mAlarmSound.setText(ringtoneName);
     }
 
     private void updateRepeat(Weekdays daysOfWeek) {
@@ -180,12 +223,6 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     }
 
     public void saveAlarmInfo() {
-        if (mAlarmInfo == null) {
-            final Calendar now = Calendar.getInstance();
-            // TODO: 17-6-5 need some list to alarm name.
-            mAlarmInfo = new AlarmInfo(null, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
-        }
-        // TODO: 6/5/17 get all info
         asyncAddAlarmInfo(mAlarmInfo);
     }
 

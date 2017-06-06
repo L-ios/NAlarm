@@ -2,6 +2,7 @@ package com.lionseun.lib8.nalarm;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -17,7 +18,7 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
     public int hour;
     public int minutes;
     public String label;
-    public Uri alert;
+    private Uri ringtone;
     public Weekdays daysOfWeek;
     public boolean enabled;
     public boolean vibrate;
@@ -33,8 +34,12 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
     private static final int VIBRATE_INDEX = 8;
 
     AlarmInfo(String name, int hour, int minutes) {
-        // TODO: 17-6-5 need fixed 
-        this.name = name;
+        // TODO: 17-6-5 need fixed name
+        if (name == null) {
+            this.name = "";
+        } else {
+            this.name = name;
+        }
         this.hour = hour;
         this.minutes = minutes;
         enabled = false;
@@ -48,8 +53,8 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         this.hour = c.getInt(HOUR_INDEX);
         this.minutes = c.getInt(MINUTES_INDEX);
         this.label = c.getString(LABEL_INDEX);
-        // TODO: 6/6/17 alert to rename ? 
-        this.alert = new Uri.Builder().scheme(c.getString(RINGTONE_INDEX)).build();
+        // TODO: 6/6/17 ringtone to rename ?
+        this.ringtone = new Uri.Builder().scheme(c.getString(RINGTONE_INDEX)).build();
         this.daysOfWeek = Weekdays.fromBits(c.getInt(DAYS_OF_WEEK_INDEX));
         this.enabled = c.getInt(ENABLED_INDEX) != 0;
         this.vibrate = c.getInt(VIBRATE_INDEX) != 0;
@@ -62,9 +67,23 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         this.minutes = in.readInt();
         this.daysOfWeek = Weekdays.fromBits(in.readInt());
         this.label = in.readString();
-        this.alert = in.readParcelable(Uri.class.getClassLoader());
+        this.ringtone = in.readParcelable(Uri.class.getClassLoader());
         this.enabled = in.readByte() != 0;
         this.vibrate = in.readByte() != 0;
+    }
+
+    public Uri getRingtone() {
+        if (ringtone == null) {
+            return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        }
+        return ringtone;
+    }
+
+    public void setRingtone(Uri ringtone) {
+        if (ringtone == null) {
+            this.ringtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        }
+        this.ringtone = ringtone;
     }
 
     public static final Creator<AlarmInfo> CREATOR = new Creator<AlarmInfo>() {
@@ -84,6 +103,8 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         return 0;
     }
 
+
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
@@ -92,7 +113,7 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         dest.writeInt(this.minutes);
         dest.writeInt(this.daysOfWeek.getBits());
         dest.writeString(this.label);
-        dest.writeParcelable(this.alert, flags);
+        dest.writeParcelable(this.ringtone, flags);
         dest.writeByte((byte) (this.enabled ? 1 : 0));
         dest.writeByte((byte) (this.vibrate ? 1 : 0));
     }
@@ -106,7 +127,7 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
                 ", minutes=" + minutes +
                 ", daysOfWeek=" + daysOfWeek +
                 ", label='" + label + '\"' +
-                ", alert=" + alert +
+                ", ringtone=" + ringtone +
                 ", enabled=" + enabled +
                 ", vibrate=" + vibrate +
                 '}';
@@ -121,10 +142,10 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         values.put(DAYS_OF_WEEK, daysOfWeek.getBits());
         values.put(VIBRATE, vibrate ? 1 : 0);
         values.put(LABEL, label);
-        if (alert == null) {
+        if (ringtone == null) {
             values.putNull(RINGTONE);
         } else {
-            values.put(RINGTONE, alert.toString());
+            values.put(RINGTONE, ringtone.toString());
         }
         return values;
     }

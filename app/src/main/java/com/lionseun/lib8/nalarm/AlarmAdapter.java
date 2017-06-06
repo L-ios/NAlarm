@@ -2,7 +2,6 @@ package com.lionseun.lib8.nalarm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,7 +104,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mAlarmSwitch.setChecked(info.enabled);
             mAlarmRptInfo.setText(info.daysOfWeek.toString());
             // TODO: 6/3/17 ring text 
-            mAlarmRing.setText(info.alert.toString());
+            mAlarmRing.setText(info.getRingtone().toString());
         }
         
         void setClickListener() {
