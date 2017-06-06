@@ -14,13 +14,23 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
 
     public long id;
     public String name;
-    public boolean enabled;
     public int hour;
     public int minutes;
-    public Weekdays daysOfWeek;
-    public boolean vibrate;
     public String label;
     public Uri alert;
+    public Weekdays daysOfWeek;
+    public boolean enabled;
+    public boolean vibrate;
+
+    private static final int ID_INDEX = 0;
+    private static final int NAME_INDEX = 1;
+    private static final int HOUR_INDEX = 2;
+    private static final int MINUTES_INDEX = 3;
+    private static final int LABEL_INDEX = 4;
+    private static final int RINGTONE_INDEX = 5;
+    private static final int DAYS_OF_WEEK_INDEX = 6;
+    private static final int ENABLED_INDEX = 7;
+    private static final int VIBRATE_INDEX = 8;
 
     AlarmInfo(String name, int hour, int minutes) {
         // TODO: 17-6-5 need fixed 
@@ -33,7 +43,16 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
     }
     
     AlarmInfo(Cursor c) {
-        // TODO: 6/5/17 build alarminfo by Cursor 
+        this.id = c.getLong(ID_INDEX);
+        this.name = c.getString(NAME_INDEX);
+        this.hour = c.getInt(HOUR_INDEX);
+        this.minutes = c.getInt(MINUTES_INDEX);
+        this.label = c.getString(LABEL_INDEX);
+        // TODO: 6/6/17 alert to rename ? 
+        this.alert = new Uri.Builder().scheme(c.getString(RINGTONE_INDEX)).build();
+        this.daysOfWeek = Weekdays.fromBits(c.getInt(DAYS_OF_WEEK_INDEX));
+        this.enabled = c.getInt(ENABLED_INDEX) == 1;
+        this.vibrate = c.getInt(VIBRATE_INDEX) == 1;
     }
     
     protected AlarmInfo(Parcel in) {
