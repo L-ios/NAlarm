@@ -4,15 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.TimeUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -39,8 +41,11 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         // 用于数据和单个view的绑ListView中Adapter的getView
-        // TODO: 6/5/17 改善view的监听 
-        ((AlarmInfoViewHolder)viewHolder).updateAlarmInfo(mAlarmInfoList.get(position));
+        if (viewHolder instanceof AlarmInfoViewHolder) {
+            AlarmInfoViewHolder alarmInfoViewHolder = (AlarmInfoViewHolder) viewHolder;
+            alarmInfoViewHolder.updateAlarmInfo(mAlarmInfoList.get(position));
+            alarmInfoViewHolder.setClickListener();
+        }
     }
 
     public AlarmAdapter setItemInfos(List<AlarmInfo> alarmInfoList) {
@@ -58,19 +63,20 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return mAlarmInfoList == null ? 0 : mAlarmInfoList.size();
     }
 
-    public void startAlarmInfoActivity() {
+    public void startAlarmInfoActivity(AlarmInfo alarmInfo) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClass(mContext, AlarmInfoActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("alarminfo", null);
-        mContext.startActivity(intent, bundle);
+        intent.putExtra("alarminfo", alarmInfo);
+        mContext.startActivity(intent);
     }
 
 
     public class AlarmInfoViewHolder extends RecyclerView.ViewHolder {
+        View parent;
+        AlarmInfo mAlarmInfo;
         ImageView mAlarmIcon;
         TextView mAlarmTime;
-        TextView mAlarmNote;
+        TextView mAlarmLabel;
         Switch mAlarmSwitch;
         TextView mAlarmRptInfo;
         TextView mAlarmRing;
@@ -78,38 +84,55 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         AlarmInfoViewHolder(View view) {
             super(view);
+            parent = view;
             mAlarmIcon = (ImageView) view.findViewById(R.id.alarm_icon);
             mAlarmTime = (TextView) view.findViewById(R.id.alarm_time);
-            mAlarmNote = (TextView) view.findViewById(R.id.alarm_note);
+            mAlarmLabel = (TextView) view.findViewById(R.id.alarm_note);
             mAlarmSwitch = (Switch) view.findViewById(R.id.alarm_switch);
             mAlarmRptInfo = (TextView) view.findViewById(R.id.alarm_rpt_info);
             mAlarmRing = (TextView) view.findViewById(R.id.alarm_ring);
-            view.setOnClickListener((v) -> {
-                changeStatus();
-            });
-
-            view.setOnLongClickListener((v) -> {
-                AlarmAdapter.this.startAlarmInfoActivity();
-                return true;
-            });
         }
         
-        private void updateAlarmInfo(AlarmInfo info) {
+        void updateAlarmInfo(AlarmInfo info) {
             if (info == null) {
                 return;
             }
+            mAlarmInfo = info;
             // TODO: 6/3/17 build picture 
             //mAlarmIcon.setImageURI(info.);
-            // TODO: 6/3/17 update time show 
-            mAlarmTime.setText("" + info.hour + " : " + info.minutes);
-            mAlarmNote.setText(info.label);
+            updateTime(info.hour, info.minutes);
+            mAlarmLabel.setText(info.label + "todo");
             mAlarmSwitch.setChecked(info.enabled);
-            // TODO: 6/3/17 repeat text 
-            mAlarmRptInfo.setText("TODO");
+            mAlarmRptInfo.setText(info.daysOfWeek.toString());
             // TODO: 6/3/17 ring text 
-            mAlarmRing.setText("TODO");
+            mAlarmRing.setText(info.alert.toString());
+        }
+        
+        void setClickListener() {
+            // TODO: 6/5/17 改善view的监听
+            parent.setOnClickListener((v) -> {
+                AlarmAdapter.this.startAlarmInfoActivity(this.mAlarmInfo);
+            });
+
+            parent.setOnLongClickListener((v) -> {
+                // TODO: 6/6/17 进入编辑模式，进行删除
+                // feature: 6/6/17 长按如同电脑右键
+                Toast.makeText(mContext, "todo how to delete item", Toast.LENGTH_LONG).show();
+                return true;
+            });
+            mAlarmSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                
+            });
         }
 
+        private void updateTime(int hourOfDay, int minute) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+            mAlarmTime.setText(dateFormat.format(calendar.getTime()));
+        }
+        
         /**
          * 更新每个闹铃的状态
          */

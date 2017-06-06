@@ -39,7 +39,10 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO: 6/6/17 先选择时间 
+        Intent intent = getIntent();
+        mAlarmInfo = intent.getParcelableExtra("alarminfo");
         super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.activity_alarm_info);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -52,7 +55,9 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
 
         final Calendar now = Calendar.getInstance();
         // TODO: 17-6-5 need some list to alarm name.
-        mAlarmInfo = new AlarmInfo(null, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
+        if (mAlarmInfo == null) {
+            mAlarmInfo = new AlarmInfo(null, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
+        }
 
         mAlarmName = (TextView) findViewById(R.id.alarm_name);
         mAlarmTime = (TextView) findViewById(R.id.alarm_time);
