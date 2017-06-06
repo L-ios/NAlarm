@@ -5,6 +5,8 @@ import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +21,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
@@ -34,6 +38,7 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // TODO: 6/6/17 先选择时间 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_info);
 
@@ -67,8 +72,17 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         mLabel = (EditText) findViewById(R.id.alarm_label);
         mRepeat = (TextView) findViewById(R.id.alarm_rpt);
         mAlarmSound = (TextView) findViewById(R.id.alarm_sound);
+        mAlarmSound.setOnClickListener(v -> {
+            // TODO: 6/6/17 list ringtone 
+        });
+
         mEnable = (CheckBox) findViewById(R.id.is_vibrate);
-        
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateActivity();
     }
 
     @Override
@@ -137,7 +151,11 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     }
 
     private void updateTime(int hourOfDay, int minute) {
-        mAlarmTime.setText("" + hourOfDay + " : " + minute);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        mAlarmTime.setText(dateFormat.format(calendar.getTime()));
     }
 
     private void updateSound(Uri soundName) {

@@ -32,7 +32,6 @@
                 android:layout_gravity="center"
                 android:ems="10"
                 android:gravity="center_horizontal|center"
-                android:text="@string/default_alrm_time"
                 android:textColorHint="?android:attr/textColorHighlight"
                 android:textSize="@dimen/alarm_info_time_font_size"/>
 
