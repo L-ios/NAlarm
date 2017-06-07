@@ -2,13 +2,13 @@ package com.lionseun.lib8.nalarm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -165,9 +165,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return weekdays.toString(mContext,Weekdays.Order.MON_TO_SUN);
         }
         
-        private String getRingName(Uri ringtone) {
-            // TODO: 6/7/17 ring name 
-            return null;
+        private String getRingName(Uri ringtoneUri) {
+            String ringtoneName = RingtoneManager.getRingtone(mContext, ringtoneUri).getTitle(mContext);
+
+            return ringtoneName;
         }
         
         /**
