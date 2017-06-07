@@ -21,7 +21,7 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
     private Uri ringtone;
     public Weekdays daysOfWeek;
     public boolean enabled;
-    public boolean vibrate;
+    public boolean vibrate = true;
 
     private static final int ID_INDEX = 0;
     private static final int NAME_INDEX = 1;
@@ -34,7 +34,6 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
     private static final int VIBRATE_INDEX = 8;
 
     AlarmInfo(String name, int hour, int minutes) {
-        // TODO: 17-6-5 need fixed name
         if (name == null) {
             this.name = "";
         } else {
@@ -42,9 +41,9 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         }
         this.hour = hour;
         this.minutes = minutes;
-        enabled = false;
-        daysOfWeek = Weekdays.fromBits(0x3ffe);
         label = "";
+        daysOfWeek = Weekdays.fromBits(0x1f);
+        enabled = false;
     }
     
     AlarmInfo(Cursor c) {

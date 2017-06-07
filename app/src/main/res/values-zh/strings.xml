@@ -13,4 +13,6 @@
     <string name="alarm_quit_message">不保存?</string>
     <string name="alarm_save_message">保存并退出?</string>
     <string name="every_day">每天</string>
+    <string name="select_alrm_ring_title">选择闹铃</string>
+    <string name="no_label">无标签</string>
 </resources>

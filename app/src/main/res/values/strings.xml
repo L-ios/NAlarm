@@ -23,4 +23,17 @@
     <string name="every_day">Every day</string>
     <string name="day_concat" translatable="false">", "</string>
     <string name="no_label">No Label</string>
+    <string name="select_alrm_ring_title">Select Ringtone</string>
+    
+    <array name="alarm_name_list">
+        <item>Get Up</item>
+        <item>Eat</item>
+        <item>Sleep</item>
+        <item>Work</item>
+        <item>Game</item>
+        <item>Movie</item>
+        <item>Music</item>
+        <item>Running</item>
+        <item>Walk</item>
+    </array>
 </resources>

@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -27,7 +28,7 @@ import java.util.Calendar;
 public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
     private AlarmInfo mAlarmInfo;
-
+    private boolean is_new = true;
     private TextView mAlarmName;
     private TextView mAlarmTime;
     private EditText mLabel;
@@ -36,11 +37,22 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     private TextView mRepeat;
     private static final int RESULT_RINGTONE = 0x2;
 
+    public static String getName(Context context, Calendar calendar) {
+        String[] names = context.getResources().getStringArray(R.array.alarm_name_list);
+        int hour = 0;
+        if (calendar != null) {
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+        }
+        if (names.length > hour) {
+            return names[hour];
+        }else {
+            return names[hour % names.length];
+        }
+    }
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO: 6/6/17 先选择时间 
-        Intent intent = getIntent();
-        mAlarmInfo = intent.getParcelableExtra("alarminfo");
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_alarm_info);
@@ -52,14 +64,16 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-
-        final Calendar now = Calendar.getInstance();
-        // TODO: 17-6-5 need some list to alarm name.
+        
+        Intent intent = getIntent();
+        mAlarmInfo = intent.getParcelableExtra("alarminfo");
         if (mAlarmInfo == null) {
-            mAlarmInfo = new AlarmInfo(null, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
+            is_new = false;
+            final Calendar now = Calendar.getInstance();
+            mAlarmInfo = new AlarmInfo(getName(this, now), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
             mAlarmInfo.setRingtone(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
         }
-
+        
         mAlarmName = (TextView) findViewById(R.id.alarm_name);
         mAlarmTime = (TextView) findViewById(R.id.alarm_time);
         mAlarmTime.setOnClickListener((v) -> {
@@ -76,6 +90,10 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             timePickDialog.show();
         });
         mLabel = (EditText) findViewById(R.id.alarm_label);
+        mLabel.clearFocus();
+        mLabel.setOnClickListener(v -> {
+            mLabel.requestFocus();
+        });
         mRepeat = (TextView) findViewById(R.id.alarm_rpt);
         mAlarmSound = (TextView) findViewById(R.id.alarm_sound);
         mAlarmSound.setOnClickListener(v -> {
@@ -180,6 +198,10 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     
     public void updateActivity() {
         if (mAlarmInfo != null) {
+            if (!is_new) {
+                mAlarmName.clearFocus();
+                mLabel.clearFocus();
+            }
             mAlarmName.setText(mAlarmInfo.name);
             updateTime(mAlarmInfo.hour, mAlarmInfo.minutes);
             mLabel.setText(mAlarmInfo.label);
@@ -236,6 +258,7 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
 
     public void asyncAddAlarmInfo(final AlarmInfo alarmInfo) {
         // TODO: 17-6-5 temper for here
+        // TODO: 6/7/17 插入有问题 
         final AsyncTask<Void, Void, Object> updateTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
@@ -253,6 +276,4 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         };
         updateTask.execute();
     }
-
-
 }
