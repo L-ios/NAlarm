@@ -52,8 +52,10 @@ public class AlarmInfo implements Parcelable, AlarmContract.AlarmsColumns {
         this.hour = c.getInt(HOUR_INDEX);
         this.minutes = c.getInt(MINUTES_INDEX);
         this.label = c.getString(LABEL_INDEX);
-        // TODO: 6/6/17 ringtone to rename ?
-        this.ringtone = new Uri.Builder().scheme(c.getString(RINGTONE_INDEX)).build();
+        String uriString = c.getString(RINGTONE_INDEX);
+        if (uriString != null) {
+            this.ringtone = Uri.parse(uriString);
+        }
         this.daysOfWeek = Weekdays.fromBits(c.getInt(DAYS_OF_WEEK_INDEX));
         this.enabled = c.getInt(ENABLED_INDEX) != 0;
         this.vibrate = c.getInt(VIBRATE_INDEX) != 0;
