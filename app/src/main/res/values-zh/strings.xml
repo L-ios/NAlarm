@@ -15,4 +15,16 @@
     <string name="every_day">每天</string>
     <string name="select_alrm_ring_title">选择闹铃</string>
     <string name="no_label">无标签</string>
+
+    <array name="alarm_name_list">
+        <item>起床</item>
+        <item>吃饭</item>
+        <item>睡觉</item>
+        <item>工作</item>
+        <item>游戏</item>
+        <item>电影</item>
+        <item>音乐</item>
+        <item>跑步</item>
+        <item>散步</item>
+    </array>
 </resources>

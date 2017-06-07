@@ -98,13 +98,11 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         mAlarmSound = (TextView) findViewById(R.id.alarm_sound);
         mAlarmSound.setOnClickListener(v -> {
             Intent ringtoneIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-//            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, mAlarmInfo.getRingtone());
             ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
             ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
-            // TODO: 17-6-6 picked ringtone 
-            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI, mAlarmInfo.getRingtone());
             ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-//            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, mAlarmInfo.getRingtone());
+            // TODO: 17-6-6 picked ringtone
+            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, mAlarmInfo.getRingtone());
             ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "设置闹铃");
             startActivityForResult(ringtoneIntent, RESULT_RINGTONE);
         });
