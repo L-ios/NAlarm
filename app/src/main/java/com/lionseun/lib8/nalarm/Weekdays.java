@@ -311,23 +311,20 @@ public final class Weekdays {
         }
 
         if (mBits == ALL_DAYS) {
-            // TODO: 17-6-1 every day string
-//            return context.getString(R.string.every_day);
+            return context.getString(R.string.every_day);
         }
 
         final boolean longNames = forceLongNames || getCount() <= 1;
         final DateFormatSymbols dfs = new DateFormatSymbols();
         final String[] weekdays = longNames ? dfs.getWeekdays() : dfs.getShortWeekdays();
 
-        //TODO: 17-6-1 separator string from day_concat
-        // final String separator = context.getString(R.string.day_concat);
+         final String separator = context.getString(R.string.day_concat);
 
         final StringBuilder builder = new StringBuilder(40);
         for (int calendarDay : order.getCalendarDays()) {
             if (isBitOn(calendarDay)) {
                 if (builder.length() > 0) {
-                    // TODO: 17-6-1 separator string
-//                    builder.append(separator);
+                    builder.append(separator);
                 }
                 builder.append(weekdays[calendarDay]);
             }

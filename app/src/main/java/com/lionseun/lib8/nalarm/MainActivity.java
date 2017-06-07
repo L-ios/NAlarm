@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // TODO: 6/3/17 onLoadFinished 
         // 加载完成后的操作
         List<AlarmInfo> alarmInfoList = new ArrayList<>(data.getCount());
         for (data.moveToFirst(); !data.isAfterLast(); data.moveToNext()) {
@@ -105,12 +104,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             alarmInfoList.add(alarmInfo);
         }
         mAlarmAdapter.setItemInfos(alarmInfoList);
-        // TODO: 6/5/17 使用数据更新adapter 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // TODO: 6/3/17 onLoaderReset 
         // nothing to do for temper
     }
 }

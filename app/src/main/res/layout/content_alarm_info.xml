@@ -60,24 +60,15 @@
                     android:layout_height="wrap_content"
                     android:text="@string/ring_label"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        app:srcCompat="@android:drawable/ic_popup_reminder"/>
-
-                    <TextView
-                        android:id="@+id/alarm_sound"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|start"
-                        android:text="@string/alarm_sound"/>
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/alarm_sound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:padding="8dp"
+                    android:drawableLeft="@android:drawable/ic_popup_reminder"
+                    android:drawablePadding="8dp"
+                    android:text="@string/alarm_sound"/>
 
             </LinearLayout>
 

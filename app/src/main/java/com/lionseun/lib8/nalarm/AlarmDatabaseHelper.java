@@ -34,7 +34,6 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
     private static final int VERSION_1 = 1;
 
     // This creates a default alarm at 8:30 for every Mon,Tue,Wed,Thu,Fri
-    // TODO: 6/3/17 change this test data, alarm 1 and alarm 2 
     private static final String DEFAULT_ALARM_1 = "('get up', 8, 30, 31, 0, 1, '', NULL);";
 
     // This creates a default alarm at 9:30 for every Sat,Sun
@@ -88,7 +87,6 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
     }
 
     long fixAlarmInsert(ContentValues values) {
-        // TODO: 6/5/17 need fixed this method 
         // Why are we doing this? Is this not a programming bug if we try to
         // insert an already used id?
         final SQLiteDatabase db = getWritableDatabase();

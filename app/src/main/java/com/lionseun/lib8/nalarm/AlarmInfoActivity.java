@@ -215,11 +215,10 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     }
 
     private void updateRepeat(Weekdays daysOfWeek) {
-        // TODO: 17-6-5 repeat
         if (daysOfWeek == null) {
             return;
         }
-        mRepeat.setText(daysOfWeek.toString());
+        mRepeat.setText(daysOfWeek.toString(this, Weekdays.Order.MON_TO_SUN));
     }
 
     public void saveAlarmInfo() {

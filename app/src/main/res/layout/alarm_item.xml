@@ -18,13 +18,17 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageView
+            <TextView
                 android:id="@+id/alarm_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:contentDescription="@string/alarm_icon_desc"
-                card_view:srcCompat="@mipmap/ic_launcher_round"/>
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:textSize="32sp"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:background="@mipmap/alarm_icon_background_round"
+                android:padding="8dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

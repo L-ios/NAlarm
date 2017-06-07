@@ -12,4 +12,5 @@
     <string name="ring_label">闹铃铃声</string>
     <string name="alarm_quit_message">不保存?</string>
     <string name="alarm_save_message">保存并退出?</string>
+    <string name="every_day">每天</string>
 </resources>

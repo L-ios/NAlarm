@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="colorWhite">#99303F9F</color>
+    
     <color name="no_alarms">#4CFFFFFF</color>
     <color name="white_63p">#A0FFFFFF</color>
 

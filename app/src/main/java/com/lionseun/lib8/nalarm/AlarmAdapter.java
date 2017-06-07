@@ -2,7 +2,9 @@ package com.lionseun.lib8.nalarm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +75,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public class AlarmInfoViewHolder extends RecyclerView.ViewHolder {
         View parent;
         AlarmInfo mAlarmInfo;
-        ImageView mAlarmIcon;
+        TextView mAlarmIcon;
         TextView mAlarmTime;
         TextView mAlarmLabel;
         Switch mAlarmSwitch;
@@ -84,7 +86,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         AlarmInfoViewHolder(View view) {
             super(view);
             parent = view;
-            mAlarmIcon = (ImageView) view.findViewById(R.id.alarm_icon);
+            mAlarmIcon = (TextView) view.findViewById(R.id.alarm_icon);
             mAlarmTime = (TextView) view.findViewById(R.id.alarm_time);
             mAlarmLabel = (TextView) view.findViewById(R.id.alarm_note);
             mAlarmSwitch = (Switch) view.findViewById(R.id.alarm_switch);
@@ -97,14 +99,12 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 return;
             }
             mAlarmInfo = info;
-            // TODO: 6/3/17 build picture 
-            //mAlarmIcon.setImageURI(info.);
+            updateIcon(info.name);
             updateTime(info.hour, info.minutes);
-            mAlarmLabel.setText(info.label + "todo");
+            updateLabel(info.label);
             mAlarmSwitch.setChecked(info.enabled);
-            mAlarmRptInfo.setText(info.daysOfWeek.toString());
-            // TODO: 6/3/17 ring text 
-            mAlarmRing.setText(info.getRingtone().toString());
+            updateRptInfo(info.daysOfWeek);
+            updateRingtone(info.getRingtone());
         }
         
         void setClickListener() {
@@ -124,12 +124,50 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             });
         }
 
+        private void updateLabel(String label) {
+            if (TextUtils.isEmpty(label)) {
+                mAlarmLabel.setTextColor(mContext.getResources().getColor(R.color.colorWhite));
+                mAlarmLabel.setText(R.string.no_label);
+            } else {
+                mAlarmLabel.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                mAlarmLabel.setText(label);
+            }
+        }
+        
+        
+        private void updateIcon(String alarmName) {
+            if (TextUtils.isEmpty(alarmName)) {
+                mAlarmIcon.setText("");
+            } else {
+                mAlarmIcon.setText(alarmName.substring(0,1));
+            }
+        }
+        
         private void updateTime(int hourOfDay, int minute) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute);
             mAlarmTime.setText(dateFormat.format(calendar.getTime()));
+        }
+        
+        private void updateRptInfo(Weekdays weekdays) {
+            String rptStr = getRpt(weekdays);
+            mAlarmRptInfo.setText(rptStr);
+        }
+        
+        private void updateRingtone(Uri ringtone) {
+            String ringName = getRingName(ringtone);
+            mAlarmRing.setText(ringName);
+        }
+        
+        private String getRpt(Weekdays weekdays) {
+            return weekdays.toString(mContext,Weekdays.Order.MON_TO_SUN);
+        }
+        
+        private String getRingName(Uri ringtone) {
+            // TODO: 6/7/17 ring name 
+            return null;
         }
         
         /**

@@ -20,4 +20,7 @@
     <string name="alarm_sound">No Sound</string>
     <string name="alarm_quit_message">do not save?</string>
     <string name="alarm_save_message">save and quit</string>
+    <string name="every_day">Every day</string>
+    <string name="day_concat" translatable="false">", "</string>
+    <string name="no_label">No Label</string>
 </resources>
