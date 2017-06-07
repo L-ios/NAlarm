@@ -29,7 +29,6 @@ public class AlarmLoader implements AlarmContract.AlarmsColumns {
     
     public static CursorLoader getAlarmsCursorLoader(Context context) {
         return new CursorLoader(context, AlarmContract.AlarmsColumns.CONTENT_URI, QUERY_ALARMS_COLUMNS, null, null, DEFAULT_SORT_ORDER){
-            // TODO: 6/5/17 do other thind 
         };
     }
 }

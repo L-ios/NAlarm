@@ -257,7 +257,6 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     }
 
     public void asyncAddAlarmInfo(final AlarmInfo alarmInfo) {
-        // TODO: 17-6-5 temper for here
         // TODO: 6/7/17 插入有问题 
         final AsyncTask<Void, Void, Object> updateTask = new AsyncTask() {
             @Override
