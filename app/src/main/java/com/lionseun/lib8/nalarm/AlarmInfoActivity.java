@@ -124,6 +124,7 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         });
 
         mVibrate = (CheckBox) findViewById(R.id.is_vibrate);
+        mVibrate.setChecked(mAlarmInfo.vibrate);
         mVibrate.setOnCheckedChangeListener((buttonView, isChecked) -> {mAlarmInfo.vibrate = isChecked;
         });
 
@@ -233,11 +234,6 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         mAlarmTime.setText(dateFormat.format(calendar.getTime()));
     }
 
-    private void updateSound(Uri soundName) {
-        mAlarmInfo.setRingtone(soundName);
-        updateSound();
-    }
-
     private void updateSound() {
         String ringtoneName;
         Uri ringtoneUri;
@@ -252,6 +248,8 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
 
     public void saveAlarmInfo() {
         Intent intent = new Intent();
+        mAlarmInfo.name = mAlarmName.getText().toString();
+        mAlarmInfo.label = mLabel.getText().toString();
         intent.putExtra(EXTRA_ALARM, mAlarmInfo);
         int resultCode; 
         if (is_new) {
