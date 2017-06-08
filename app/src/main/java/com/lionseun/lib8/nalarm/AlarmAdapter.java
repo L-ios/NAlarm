@@ -26,11 +26,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
     private List<AlarmInfo> mAlarmInfoList;
+    private AlarmHandle mAlarmHandle;
 
     public AlarmAdapter(Context context) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
         mAlarmInfoList = new ArrayList<>();
+        if (mContext instanceof AlarmHandle) {
+            mAlarmHandle = (AlarmHandle) mContext;
+        }
     }
 
     @Override
@@ -67,7 +71,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void startAlarmInfoActivity(AlarmInfo alarmInfo) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClass(mContext, AlarmInfoActivity.class);
-        intent.putExtra("alarminfo", alarmInfo);
+        intent.putExtra(MainActivity.EXTRA_ALARM, alarmInfo);
         mContext.startActivity(intent);
     }
 
@@ -122,12 +126,17 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             });*/
 
             mAlarmSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                
+                mAlarmInfo.enabled = isChecked;
+                if (mContext instanceof AlarmHandle) {
+                    ((AlarmHandle) mContext).enableAlarm(mAlarmInfo);
+                }
             });
             
             deleteView.setClickable(true);
             deleteView.setOnClickListener(v -> {
-                // TODO: 17-6-7 delete alarm
+                if (mContext instanceof AlarmHandle) {
+                    ((AlarmHandle) mContext).deleteAlarm(mAlarmInfo);
+                }
             });
         }
 
@@ -178,18 +187,11 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return ringtoneName;
         }
         
-        /**
-         * 更新每个闹铃的状态
-         */
-        private void changeStatus() {
-            if (mAlarmSwitch != null) {
-                if (mAlarmSwitch.isChecked()) {
-                    mAlarmSwitch.setChecked(false);
-                } else {
-                    mAlarmSwitch.setChecked(true);
-
-                }
-            }
-        }
     }
+    
+    interface AlarmHandle {
+        void deleteAlarm(AlarmInfo alarmInfo);
+        void enableAlarm(AlarmInfo alarmInfo);
+    }
+    
 }

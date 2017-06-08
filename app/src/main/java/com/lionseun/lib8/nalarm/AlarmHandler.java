@@ -24,31 +24,23 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.deskclock.AlarmUtils;
-import com.android.deskclock.events.Events;
-import com.android.deskclock.provider.Alarm;
-import com.android.deskclock.provider.AlarmInstance;
-import com.android.deskclock.widget.toast.SnackbarManager;
-
 import java.util.Calendar;
 import java.util.List;
 
 /**
  * API for asynchronously mutating a single alarm.
  */
-public final class AlarmUpdateHandler {
+public final class AlarmHandler {
 
     private final Context mAppContext;
-    private final ScrollHandler mScrollHandler;
     private final View mSnackbarAnchor;
 
     // For undo
-    private Alarm mDeletedAlarm;
+    private AlarmInfo mDeletedAlarm;
 
-    public AlarmUpdateHandler(Context context, ScrollHandler scrollHandler,
+    public AlarmHandler(Context context,
             ViewGroup snackbarAnchor) {
         mAppContext = context.getApplicationContext();
-        mScrollHandler = scrollHandler;
         mSnackbarAnchor = snackbarAnchor;
     }
 
@@ -57,21 +49,19 @@ public final class AlarmUpdateHandler {
      *
      * @param alarm The alarm to be added.
      */
-    public void asyncAddAlarm(final Alarm alarm) {
+    public void asyncAddAlarm(final AlarmInfo alarm) {
         final AsyncTask<Void, Void, AlarmInstance> updateTask =
                 new AsyncTask<Void, Void, AlarmInstance>() {
                     @Override
                     protected AlarmInstance doInBackground(Void... parameters) {
                         if (alarm != null) {
-                            Events.sendAlarmEvent(R.string.action_create, R.string.label_deskclock);
+//                            Events.sendAlarmEvent(R.string.action_create, R.string.label_deskclock);
                             ContentResolver cr = mAppContext.getContentResolver();
-
+                            
                             // Add alarm to db
-                            Alarm newAlarm = Alarm.addAlarm(cr, alarm);
+                            AlarmInfo newAlarm = AlarmInfo.addAlarm(cr, alarm);
 
-                            // Be ready to scroll to this alarm on UI later.
-                            mScrollHandler.setSmoothScrollStableId(newAlarm.id);
-
+                            
                             // Create and add instance to db
                             if (newAlarm.enabled) {
                                 return setupAlarmInstance(newAlarm);
@@ -94,11 +84,11 @@ public final class AlarmUpdateHandler {
     /**
      * Modifies an alarm on the background, and optionally show a toast when done.
      *
-     * @param alarm       The alarm to be modified.
+     * @param alarmInfo       The alarm to be modified.
      * @param popToast    whether or not a toast should be displayed when done.
      * @param minorUpdate if true, don't affect any currently snoozed instances.
      */
-    public void asyncUpdateAlarm(final Alarm alarm, final boolean popToast,
+    public void asyncUpdateAlarm(final AlarmInfo alarmInfo, final boolean popToast,
             final boolean minorUpdate) {
         final AsyncTask<Void, Void, AlarmInstance> updateTask =
                 new AsyncTask<Void, Void, AlarmInstance>() {
@@ -107,33 +97,33 @@ public final class AlarmUpdateHandler {
                         ContentResolver cr = mAppContext.getContentResolver();
 
                         // Update alarm
-                        Alarm.updateAlarm(cr, alarm);
+                        AlarmInfo.updateAlarm(cr, alarmInfo);
 
                         if (minorUpdate) {
                             // just update the instance in the database and update notifications.
                             final List<AlarmInstance> instanceList =
-                                    AlarmInstance.getInstancesByAlarmId(cr, alarm.id);
+                                    AlarmInstance.getInstancesByAlarmId(cr, alarmInfo.id);
                             for (AlarmInstance instance : instanceList) {
                                 // Make a copy of the existing instance
                                 final AlarmInstance newInstance = new AlarmInstance(instance);
                                 // Copy over minor change data to the instance; we don't know
                                 // exactly which minor field changed, so just copy them all.
-                                newInstance.mVibrate = alarm.vibrate;
-                                newInstance.mRingtone = alarm.alert;
-                                newInstance.mLabel = alarm.label;
+                                newInstance.mVibrate = alarmInfo.vibrate;
+                                newInstance.mRingtone = alarmInfo.getRingtone();
+                                newInstance.mLabel = alarmInfo.label;
                                 // Since we copied the mId of the old instance and the mId is used
                                 // as the primary key in the AlarmInstance table, this will replace
                                 // the existing instance.
                                 AlarmInstance.updateInstance(cr, newInstance);
                                 // Update the notification for this instance.
-                                AlarmNotifications.updateNotification(mAppContext, newInstance);
+                                //AlarmNotifications.updateNotification(mAppContext, newInstance);
                             }
                             return null;
                         }
                         // Otherwise, this is a major update and we're going to re-create the alarm
-                        AlarmStateManager.deleteAllInstances(mAppContext, alarm.id);
+                        AlarmStateManager.deleteAllInstances(mAppContext, alarmInfo.id);
 
-                        return alarm.enabled ? setupAlarmInstance(alarm) : null;
+                        return alarmInfo.enabled ? setupAlarmInstance(alarmInfo) : null;
                     }
 
                     @Override
@@ -152,7 +142,7 @@ public final class AlarmUpdateHandler {
      *
      * @param alarm The alarm to be deleted.
      */
-    public void asyncDeleteAlarm(final Alarm alarm) {
+    public void asyncDeleteAlarm(final AlarmInfo alarm) {
         final AsyncTask<Void, Void, Boolean> deleteTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... parameters) {
@@ -162,14 +152,13 @@ public final class AlarmUpdateHandler {
                     return false;
                 }
                 AlarmStateManager.deleteAllInstances(mAppContext, alarm.id);
-                return Alarm.deleteAlarm(mAppContext.getContentResolver(), alarm.id);
+                return AlarmInfo.deleteAlarm(mAppContext.getContentResolver(), alarm.id);
             }
 
             @Override
             protected void onPostExecute(Boolean deleted) {
                 if (deleted) {
                     mDeletedAlarm = alarm;
-                    showUndoBar();
                 }
             }
         };
@@ -185,7 +174,7 @@ public final class AlarmUpdateHandler {
         final String time = DateFormat.getTimeFormat(mAppContext).format(
                 instance.getAlarmTime().getTime());
         final String text = mAppContext.getString(R.string.alarm_is_dismissed, time);
-        SnackbarManager.show(Snackbar.make(mSnackbarAnchor, text, Snackbar.LENGTH_SHORT));
+        Snackbar.make(mSnackbarAnchor, text, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -193,26 +182,11 @@ public final class AlarmUpdateHandler {
      */
     public void hideUndoBar() {
         mDeletedAlarm = null;
-        SnackbarManager.dismiss();
     }
 
-    private void showUndoBar() {
-        final Alarm deletedAlarm = mDeletedAlarm;
-        final Snackbar snackbar = Snackbar.make(mSnackbarAnchor,
-                mAppContext.getString(R.string.alarm_deleted), Snackbar.LENGTH_LONG)
-                .setAction(R.string.alarm_undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mDeletedAlarm = null;
-                        asyncAddAlarm(deletedAlarm);
-                    }
-                });
-        SnackbarManager.show(snackbar);
-    }
-
-    private AlarmInstance setupAlarmInstance(Alarm alarm) {
+    private AlarmInstance setupAlarmInstance(AlarmInfo alarmInfo) {
         final ContentResolver cr = mAppContext.getContentResolver();
-        AlarmInstance newInstance = alarm.createInstanceAfter(Calendar.getInstance());
+        AlarmInstance newInstance = alarmInfo.createInstanceAfter(Calendar.getInstance());
         newInstance = AlarmInstance.addInstance(cr, newInstance);
         // Register instance to state manager
         AlarmStateManager.registerInstance(mAppContext, newInstance, true);

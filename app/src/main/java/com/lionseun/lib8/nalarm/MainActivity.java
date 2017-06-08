@@ -10,29 +10,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AlarmAdapter.AlarmHandle{
 
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    
     private RecyclerView mAlarmRecyclerView;
     private FloatingActionButton mAlarmAdd;
     private AlarmAdapter mAlarmAdapter;
+    private AlarmHandler mAlarmHandler;
+    public static final int RESULT_UPDATA_ALARM = 2;
+    public static final int RESULT_NEW_ALARM = 3;
+    public static final String EXTRA_ALARM = "alarm.info";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,14 +47,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mAlarmAdapter = new AlarmAdapter(this);
         mAlarmRecyclerView.setAdapter(mAlarmAdapter);
         getLoaderManager().initLoader(0, null, this);
+        
+        
+        mAlarmHandler = new AlarmHandler(this,mAlarmRecyclerView );
     }
     
     private void editAlarmInfo(AlarmInfo alarmInfo) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClass(getApplicationContext(), AlarmInfoActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelable("alarminfo", alarmInfo);
-        startActivity(intent, bundle);
+        bundle.putParcelable(EXTRA_ALARM, alarmInfo);
+        startActivityForResult(intent, 0,bundle);
     }
     
 
@@ -109,5 +113,46 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // nothing to do for temper
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case RESULT_OK:
+            case RESULT_UPDATA_ALARM: {
+                AlarmInfo alarmInfo = data.getParcelableExtra(EXTRA_ALARM);
+                mAlarmHandler.asyncUpdateAlarm(alarmInfo, false, false);
+                break;
+            }
+            case RESULT_NEW_ALARM: {
+                AlarmInfo alarmInfo = data.getParcelableExtra(EXTRA_ALARM);
+                mAlarmHandler.asyncAddAlarm(alarmInfo);
+                break;
+            }
+            case RESULT_CANCELED: {
+                break;
+            }
+            case RESULT_FIRST_USER: {
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
+    AlarmHandler getAlarmHandler() {
+        return mAlarmHandler;
+    }
+    
+    @Override
+    public void deleteAlarm(AlarmInfo alarmInfo) {
+        mAlarmHandler.asyncDeleteAlarm(alarmInfo);
+    }
+
+    @Override
+    public void enableAlarm(AlarmInfo alarmInfo) {
+        mAlarmHandler.asyncUpdateAlarm(alarmInfo, false, false);
     }
 }

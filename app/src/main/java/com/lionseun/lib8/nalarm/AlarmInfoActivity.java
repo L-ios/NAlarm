@@ -25,10 +25,12 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static com.lionseun.lib8.nalarm.MainActivity.EXTRA_ALARM;
+
 public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
     private AlarmInfo mAlarmInfo;
-    private boolean is_new = true;
+    private boolean is_new = false;
     private TextView mAlarmName;
     private TextView mAlarmTime;
     private EditText mLabel;
@@ -66,9 +68,9 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         }
         
         Intent intent = getIntent();
-        mAlarmInfo = intent.getParcelableExtra("alarminfo");
+        mAlarmInfo = intent.getParcelableExtra(EXTRA_ALARM);
         if (mAlarmInfo == null) {
-            is_new = false;
+            is_new = true;
             final Calendar now = Calendar.getInstance();
             mAlarmInfo = new AlarmInfo(getName(this, now), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
             mAlarmInfo.setRingtone(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
@@ -82,9 +84,7 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             if (mAlarmInfo != null) {
                 hourOfDay = mAlarmInfo.hour;
                 minute = mAlarmInfo.minutes;
-            } else {
-                
-            }
+            } 
             TimePickerDialog timePickDialog = new TimePickerDialog(AlarmInfoActivity.this, this, hourOfDay, minute, true);
             timePickDialog.setCancelable(false);
             timePickDialog.show();
@@ -95,6 +95,9 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             mLabel.requestFocus();
         });
         mRepeat = (TextView) findViewById(R.id.alarm_rpt);
+        mRepeat.setOnClickListener(v -> {
+            
+        });
         mAlarmSound = (TextView) findViewById(R.id.alarm_sound);
         mAlarmSound.setOnClickListener(v -> {
             Intent ringtoneIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
@@ -241,7 +244,15 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     }
 
     public void saveAlarmInfo() {
-        asyncAddAlarmInfo(mAlarmInfo);
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_ALARM, mAlarmInfo);
+        int resultCode; 
+        if (is_new) {
+            resultCode = MainActivity.RESULT_NEW_ALARM;
+        } else {
+            resultCode = MainActivity.RESULT_UPDATA_ALARM;
+        }
+        setResult(resultCode, intent);
     }
 
     @Override
@@ -251,25 +262,5 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             mAlarmInfo.minutes = minute;
         }
         updateActivity();
-    }
-
-    public void asyncAddAlarmInfo(final AlarmInfo alarmInfo) {
-        // TODO: 6/7/17 插入有问题 
-        final AsyncTask<Void, Void, Object> updateTask = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                ContentResolver cr = getApplication().getContentResolver();
-                ContentValues values = alarmInfo.toContentValues();
-                Uri uri = cr.insert(AlarmContract.AlarmsColumns.CONTENT_URI, values);
-                ContentUris.parseId(uri);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                Toast.makeText(getApplicationContext(), "todo 添加alarmInfo成功", Toast.LENGTH_LONG).show();
-            }
-        };
-        updateTask.execute();
     }
 }

@@ -45,15 +45,56 @@ public final class AlarmContract {
      * This utility class cannot be instantiated
      */
     private AlarmContract() {}
+
+    private interface AlarmSettingColumns extends BaseColumns {
+        /**
+         * This string is used to indicate no ringtone.
+         */
+        Uri NO_RINGTONE_URI = Uri.EMPTY;
+
+        /**
+         * This string is used to indicate no ringtone.
+         */
+        String NO_RINGTONE = NO_RINGTONE_URI.toString();
+
+        /**
+         * True if alarm should vibrate
+         * <p>Type: BOOLEAN</p>
+         */
+        String VIBRATE = "vibrate";
+
+        /**
+         * Alarm label.
+         *
+         * <p>Type: STRING</p>
+         */
+        String LABEL = "label";
+
+        /**
+         * Audio alert to play when alarm triggers. Null entry
+         * means use system default and entry that equal
+         * Uri.EMPTY.toString() means no ringtone.
+         *
+         * <p>Type: STRING</p>
+         */
+        String RINGTONE = "ringtone";
+    }
     
     /**
      * Constants for the Alarms table, which contains the user created alarms.
      */
-    protected interface AlarmsColumns extends BaseColumns {
+    protected interface AlarmsColumns extends AlarmSettingColumns, BaseColumns {
         /**
          * The content:// style URL for this table.
          */
         Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/alarms");
+
+        /**
+         * The content:// style URL for the alarms with instance tables, which is used to get the
+         * next firing instance and the current state of an alarm.
+         */
+        Uri ALARMS_WITH_INSTANCES_URI = Uri.parse("content://" + AUTHORITY
+                + "/alarms_with_instances");
 
         /**
          * Alarm name
@@ -75,22 +116,6 @@ public final class AlarmContract {
         String MINUTES = "minutes";
 
         /**
-         * Alarm label.
-         *
-         * <p>Type: STRING</p>
-         */
-        String LABEL = "label";
-        
-        /**
-         * Audio ringtone to play when alarm triggers. Null entry
-         * means use system default and entry that equal
-         * Uri.EMPTY.toString() means no ringtone.
-         *
-         * <p>Type: STRING</p>
-         */
-        String RINGTONE = "ringtone";
-        
-        /**
          * Days of the week encoded as a bit set.
          * <p>Type: INTEGER</p>
          *
@@ -103,11 +128,123 @@ public final class AlarmContract {
          * <p>Type: BOOLEAN</p>
          */
         String ENABLED = "enabled";
+    }
+
+    protected interface InstancesColumns extends AlarmSettingColumns, BaseColumns {
+        /**
+         * The content:// style URL for this table.
+         */
+        Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/instances");
 
         /**
-         * True if alarm should vibrate
-         * <p>Type: BOOLEAN</p>
+         * Alarm state when to show no notification.
+         *
+         * Can transitions to:
+         * LOW_NOTIFICATION_STATE
          */
-        String VIBRATE = "vibrate";
+        int SILENT_STATE = 0;
+
+        /**
+         * Alarm state to show low priority alarm notification.
+         *
+         * Can transitions to:
+         * HIDE_NOTIFICATION_STATE
+         * HIGH_NOTIFICATION_STATE
+         * DISMISSED_STATE
+         */
+        int LOW_NOTIFICATION_STATE = 1;
+
+        /**
+         * Alarm state to hide low priority alarm notification.
+         *
+         * Can transitions to:
+         * HIGH_NOTIFICATION_STATE
+         */
+        int HIDE_NOTIFICATION_STATE = 2;
+
+        /**
+         * Alarm state to show high priority alarm notification.
+         *
+         * Can transitions to:
+         * DISMISSED_STATE
+         * FIRED_STATE
+         */
+        int HIGH_NOTIFICATION_STATE = 3;
+
+        /**
+         * Alarm state when alarm is in snooze.
+         *
+         * Can transitions to:
+         * DISMISSED_STATE
+         * FIRED_STATE
+         */
+        int SNOOZE_STATE = 4;
+
+        /**
+         * Alarm state when alarm is being fired.
+         *
+         * Can transitions to:
+         * DISMISSED_STATE
+         * SNOOZED_STATE
+         * MISSED_STATE
+         */
+        int FIRED_STATE = 5;
+
+        /**
+         * Alarm state when alarm has been missed.
+         *
+         * Can transitions to:
+         * DISMISSED_STATE
+         */
+        int MISSED_STATE = 6;
+
+        /**
+         * Alarm state when alarm is done.
+         */
+        int DISMISSED_STATE = 7;
+
+        /**
+         * Alarm state when alarm has been dismissed before its intended firing time.
+         */
+        int PREDISMISSED_STATE = 8;
+
+        /**
+         * Alarm year.
+         *
+         * <p>Type: INTEGER</p>
+         */
+        String YEAR = "year";
+
+        /**
+         * Alarm month in year.
+         *
+         * <p>Type: INTEGER</p>
+         */
+        String MONTH = "month";
+
+        /**
+         * Alarm day in month.
+         *
+         * <p>Type: INTEGER</p>
+         */
+        String DAY = "day";
+
+        /**
+         * Alarm hour in 24-hour localtime 0 - 23.
+         * <p>Type: INTEGER</p>
+         */
+        String HOUR = "hour";
+
+        /**
+         * Alarm minutes in localtime 0 - 59
+         * <p>Type: INTEGER</p>
+         */
+        String MINUTES = "minutes";
+
+        /**
+         * Foreign key to Alarms table
+         * <p>Type: INTEGER (long)</p>
+         */
+        String ALARM_ID = "alarm_id";
     }
 }

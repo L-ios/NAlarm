@@ -4,7 +4,6 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,8 +12,14 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
+import java.util.Map;
+
+import  com.lionseun.lib8.nalarm.AlarmContract.AlarmsColumns;
+import  com.lionseun.lib8.nalarm.AlarmContract.InstancesColumns;
 import static com.lionseun.lib8.nalarm.AlarmDatabaseHelper.ALARMS_TABLE_NAME;
+import static com.lionseun.lib8.nalarm.AlarmDatabaseHelper.INSTANCES_TABLE_NAME;
 
 /**
  * Created by lingyang on 6/5/17.
@@ -26,11 +31,74 @@ public class AlarmProvider extends ContentProvider {
 
     private static final int ALARMS = 1;
     private static final int ALARMS_ID = 2;
-    
+    private static final int INSTANCES = 3;
+    private static final int INSTANCES_ID = 4;
+    private static final int ALARMS_WITH_INSTANCES = 5;
+
+
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    /**
+     * Projection map used by query for snoozed alarms.
+     */
+    private static final Map<String, String> sAlarmsWithInstancesProjection = new ArrayMap<>();
+    static {
+        sAlarmsWithInstancesProjection.put(ALARMS_TABLE_NAME + "." + AlarmsColumns._ID,
+                ALARMS_TABLE_NAME + "." + AlarmsColumns._ID);
+        sAlarmsWithInstancesProjection.put(ALARMS_TABLE_NAME + "." + AlarmsColumns.HOUR,
+                ALARMS_TABLE_NAME + "." + AlarmsColumns.HOUR);
+        sAlarmsWithInstancesProjection.put(ALARMS_TABLE_NAME + "." + AlarmsColumns.MINUTES,
+                ALARMS_TABLE_NAME + "." + AlarmsColumns.MINUTES);
+        sAlarmsWithInstancesProjection.put(ALARMS_TABLE_NAME + "." + AlarmsColumns.DAYS_OF_WEEK,
+                ALARMS_TABLE_NAME + "." + AlarmsColumns.DAYS_OF_WEEK);
+        sAlarmsWithInstancesProjection.put(ALARMS_TABLE_NAME + "." + AlarmsColumns.ENABLED,
+                ALARMS_TABLE_NAME + "." + AlarmsColumns.ENABLED);
+        sAlarmsWithInstancesProjection.put(ALARMS_TABLE_NAME + "." + AlarmsColumns.VIBRATE,
+                ALARMS_TABLE_NAME + "." + AlarmsColumns.VIBRATE);
+        sAlarmsWithInstancesProjection.put(ALARMS_TABLE_NAME + "." + AlarmsColumns.LABEL,
+                ALARMS_TABLE_NAME + "." + AlarmsColumns.LABEL);
+        sAlarmsWithInstancesProjection.put(ALARMS_TABLE_NAME + "." + AlarmsColumns.RINGTONE,
+                ALARMS_TABLE_NAME + "." + AlarmsColumns.RINGTONE);
+        sAlarmsWithInstancesProjection.put(INSTANCES_TABLE_NAME + "." + InstancesColumns._ID,
+                INSTANCES_TABLE_NAME + "." + InstancesColumns._ID);
+        sAlarmsWithInstancesProjection.put(INSTANCES_TABLE_NAME + "." + InstancesColumns.YEAR,
+                INSTANCES_TABLE_NAME + "." + InstancesColumns.YEAR);
+        sAlarmsWithInstancesProjection.put(INSTANCES_TABLE_NAME + "." + InstancesColumns.MONTH,
+                INSTANCES_TABLE_NAME + "." + InstancesColumns.MONTH);
+        sAlarmsWithInstancesProjection.put(INSTANCES_TABLE_NAME + "." + InstancesColumns.DAY,
+                INSTANCES_TABLE_NAME + "." + InstancesColumns.DAY);
+        sAlarmsWithInstancesProjection.put(INSTANCES_TABLE_NAME + "." + InstancesColumns.HOUR,
+                INSTANCES_TABLE_NAME + "." + InstancesColumns.HOUR);
+        sAlarmsWithInstancesProjection.put(INSTANCES_TABLE_NAME + "." + InstancesColumns.MINUTES,
+                INSTANCES_TABLE_NAME + "." + InstancesColumns.MINUTES);
+        sAlarmsWithInstancesProjection.put(INSTANCES_TABLE_NAME + "." + InstancesColumns.LABEL,
+                INSTANCES_TABLE_NAME + "." + InstancesColumns.LABEL);
+        sAlarmsWithInstancesProjection.put(INSTANCES_TABLE_NAME + "." + InstancesColumns.VIBRATE,
+                INSTANCES_TABLE_NAME + "." + InstancesColumns.VIBRATE);
+    }
+
+    private static final String ALARM_JOIN_INSTANCE_TABLE_STATEMENT =
+            ALARMS_TABLE_NAME + " LEFT JOIN " + INSTANCES_TABLE_NAME + " ON (" +
+                    ALARMS_TABLE_NAME + "." + AlarmsColumns._ID + " = " + InstancesColumns.ALARM_ID + ")";
+
+    private static final String ALARM_JOIN_INSTANCE_WHERE_STATEMENT =
+            INSTANCES_TABLE_NAME + "." + InstancesColumns._ID + " IS NULL OR " +
+                    INSTANCES_TABLE_NAME + "." + InstancesColumns._ID + " = (" +
+                    "SELECT " + InstancesColumns._ID +
+                    " FROM " + INSTANCES_TABLE_NAME +
+                    " WHERE " + InstancesColumns.ALARM_ID +
+                    " = " + ALARMS_TABLE_NAME + "." + AlarmsColumns._ID +
+                    " ORDER BY " + InstancesColumns.YEAR + ", " + 
+                    InstancesColumns.MONTH + ", " +
+                    InstancesColumns.DAY + " LIMIT 1)";
+
+
     static {
         sURIMatcher.addURI(AlarmContract.AUTHORITY, "alarms", ALARMS);
         sURIMatcher.addURI(AlarmContract.AUTHORITY, "alarms/#", ALARMS_ID);
+        sURIMatcher.addURI(AlarmContract.AUTHORITY, "instances", INSTANCES);
+        sURIMatcher.addURI(AlarmContract.AUTHORITY, "instances/#", INSTANCES_ID);
+        sURIMatcher.addURI(AlarmContract.AUTHORITY, "alarms_with_instances", ALARMS_WITH_INSTANCES);
     }
 
 
@@ -57,6 +125,19 @@ public class AlarmProvider extends ContentProvider {
                 qb.appendWhere(uri.getLastPathSegment());
                 break;
             }
+            case INSTANCES:
+                qb.setTables(INSTANCES_TABLE_NAME);
+                break;
+            case INSTANCES_ID:
+                qb.setTables(INSTANCES_TABLE_NAME);
+                qb.appendWhere(AlarmContract.InstancesColumns._ID + "=");
+                qb.appendWhere(uri.getLastPathSegment());
+                break;
+            case ALARMS_WITH_INSTANCES:
+                qb.setTables(ALARM_JOIN_INSTANCE_TABLE_STATEMENT);
+                qb.appendWhere(ALARM_JOIN_INSTANCE_WHERE_STATEMENT);
+                qb.setProjectionMap(sAlarmsWithInstancesProjection);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -81,6 +162,11 @@ public class AlarmProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/alarms";
             case ALARMS_ID:
                 return "vnd.android.cursor.item/alarms";
+            case INSTANCES:
+                return "vnd.android.cursor.dir/instances";
+            case INSTANCES_ID:
+                return "vnd.android.cursor.item/instances";
+                
             default:
                 throw new IllegalArgumentException("Unknown URI");
         }
@@ -95,6 +181,10 @@ public class AlarmProvider extends ContentProvider {
         switch (sURIMatcher.match(uri)) {
             case ALARMS: {
                 rowId = mOpenHelper.fixAlarmInsert(values);
+                break;
+            }
+            case INSTANCES: {
+                rowId = db.insert(INSTANCES_TABLE_NAME, null, values);
                 break;
             }
             default:
@@ -124,6 +214,18 @@ public class AlarmProvider extends ContentProvider {
                 }
                 count = db.delete(ALARMS_TABLE_NAME, where, whereArgs);
                 break;
+            case INSTANCES:
+                count = db.delete(INSTANCES_TABLE_NAME, where, whereArgs);
+                break;
+            case INSTANCES_ID:
+                primaryKey = uri.getLastPathSegment();
+                if (TextUtils.isEmpty(where)) {
+                    where = InstancesColumns._ID + "=" + primaryKey;
+                } else {
+                    where = InstancesColumns._ID + "=" + primaryKey + " AND (" + where + ")";
+                }
+                count = db.delete(INSTANCES_TABLE_NAME, where, whereArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Cannot delete from URI: " + uri);
         }
@@ -144,6 +246,12 @@ public class AlarmProvider extends ContentProvider {
                         AlarmContract.AlarmsColumns._ID + "=" + alarmId,
                         null);
                 break;
+            case INSTANCES_ID:
+                alarmId = uri.getLastPathSegment();
+                count = db.update(INSTANCES_TABLE_NAME, values,
+                        InstancesColumns._ID + "=" + alarmId,
+                        null);
+                break;
             default: {
                 throw new UnsupportedOperationException("Cannot update URI: " + uri);
             }
@@ -161,8 +269,9 @@ public class AlarmProvider extends ContentProvider {
 
         final int match = sURIMatcher.match(uri);
         // Also notify the joined table of changes to instances or alarms.
-        if (match == ALARMS || match == ALARMS_ID) {
-            resolver.notifyChange(AlarmContract.AlarmsColumns.CONTENT_URI, null);
+        if (match == ALARMS || match == INSTANCES || match == ALARMS_ID || match == INSTANCES_ID) {
+
+            resolver.notifyChange(AlarmsColumns.ALARMS_WITH_INSTANCES_URI, null);
         }
     }
 }

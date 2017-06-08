@@ -42,6 +42,8 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
     // Database and table names
     static final String DATABASE_NAME = "alarms.db";
     static final String ALARMS_TABLE_NAME = "alarms";
+    static final String INSTANCES_TABLE_NAME = "alarm_instances";
+
 
     private static void createAlarmsTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + ALARMS_TABLE_NAME + " (" +
@@ -57,6 +59,24 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
         LogUtils.i("Alarms Table created");
     }
 
+    private static void createInstanceTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + INSTANCES_TABLE_NAME + " (" +
+                AlarmContract.InstancesColumns._ID + " INTEGER PRIMARY KEY," +
+                AlarmContract.InstancesColumns.YEAR + " INTEGER NOT NULL, " +
+                AlarmContract.InstancesColumns.MONTH + " INTEGER NOT NULL, " +
+                AlarmContract.InstancesColumns.DAY + " INTEGER NOT NULL, " +
+                AlarmContract.InstancesColumns.HOUR + " INTEGER NOT NULL, " +
+                AlarmContract.InstancesColumns.MINUTES + " INTEGER NOT NULL, " +
+                AlarmContract.InstancesColumns.VIBRATE + " INTEGER NOT NULL, " +
+                AlarmContract.InstancesColumns.LABEL + " TEXT NOT NULL, " +
+                AlarmContract.InstancesColumns.RINGTONE + " TEXT, " +
+                AlarmContract.InstancesColumns.ALARM_ID + " INTEGER REFERENCES " +
+                ALARMS_TABLE_NAME + "(" + AlarmContract.AlarmsColumns._ID + ") " +
+                "ON UPDATE CASCADE ON DELETE CASCADE" +
+                ");");
+        LogUtils.i("Instance table created");
+    }
+    
     public AlarmDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_1);
     }
@@ -64,6 +84,7 @@ class AlarmDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         createAlarmsTable(db);
+        createInstanceTable(db);
 
         // insert default alarms
         LogUtils.i("Inserting default alarms");

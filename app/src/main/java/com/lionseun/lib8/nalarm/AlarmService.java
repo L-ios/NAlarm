@@ -28,7 +28,6 @@ import android.telephony.TelephonyManager;
 
 /**
  * This service is in charge of starting/stopping the alarm. It will bring up and manage the
- * {@link AlarmActivity} as well as {@link AlarmKlaxon}.
  *
  * Registers a broadcast receiver to listen for snooze/dismiss intents. The broadcast receiver
  * exits early if AlarmActivity is bound to prevent double-processing of the snooze/dismiss intents.
@@ -105,10 +104,9 @@ public class AlarmService extends Service {
             stopCurrentAlarm();
         }
 
-        AlarmAlertWakeLock.acquireCpuWakeLock(this);
+//        AlarmAlertWakeLock.acquireCpuWakeLock(this);
 
         mCurrentAlarm = instance;
-        AlarmNotifications.showAlarmNotification(this, mCurrentAlarm);
         mTelephonyManager.listen(mPhoneStateListener.init(), PhoneStateListener.LISTEN_CALL_STATE);
         AlarmKlaxon.start(this, mCurrentAlarm);
         sendBroadcast(new Intent(ALARM_ALERT_ACTION));
@@ -130,7 +128,7 @@ public class AlarmService extends Service {
         stopForeground(true /* removeNotification */);
 
         mCurrentAlarm = null;
-        AlarmAlertWakeLock.releaseCpuLock();
+//        AlarmAlertWakeLock.releaseCpuLock();
     }
 
     private final BroadcastReceiver mActionsReceiver = new BroadcastReceiver() {
@@ -153,13 +151,13 @@ public class AlarmService extends Service {
                     // Set the alarm state to snoozed.
                     // If this broadcast receiver is handling the snooze intent then AlarmActivity
                     // must not be showing, so always show snooze toast.
-                    AlarmStateManager.setSnoozeState(context, mCurrentAlarm, true /* showToast */);
-                    Events.sendAlarmEvent(R.string.action_snooze, R.string.label_intent);
+//                    AlarmStateManager.setSnoozeState(context, mCurrentAlarm, true /* showToast */);
+                    //Events.sendAlarmEvent(R.string.action_snooze, R.string.label_intent);
                     break;
                 case ALARM_DISMISS_ACTION:
                     // Set the alarm state to dismissed.
                     AlarmStateManager.deleteInstanceAndUpdateParent(context, mCurrentAlarm);
-                    Events.sendAlarmEvent(R.string.action_dismiss, R.string.label_intent);
+                    //Events.sendAlarmEvent(R.string.action_dismiss, R.string.label_intent);
                     break;
             }
         }
@@ -198,7 +196,7 @@ public class AlarmService extends Service {
                         LogUtils.e("No instance found to start alarm: %d", instanceId);
                         if (mCurrentAlarm != null) {
                             // Only release lock if we are not firing alarm
-                            AlarmAlertWakeLock.releaseCpuLock();
+//                            AlarmAlertWakeLock.releaseCpuLock();
                         }
                         break;
                     }
