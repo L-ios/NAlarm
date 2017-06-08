@@ -14,12 +14,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AlarmAdapter.AlarmHandle{
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private FirebaseAnalytics mFirebaseAnalytics;
     
     private RecyclerView mAlarmRecyclerView;
     private FloatingActionButton mAlarmAdd;
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+// Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         
         
         mAlarmHandler = new AlarmHandler(this,mAlarmRecyclerView );
+        FBLog("onCreate");
     }
     
     private void editAlarmInfo(AlarmInfo alarmInfo) {
@@ -154,5 +160,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void enableAlarm(AlarmInfo alarmInfo) {
         mAlarmHandler.asyncUpdateAlarm(alarmInfo, false, false);
+    }
+    
+    private void FBLog(String msg) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, BuildConfig.APPLICATION_ID);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, LOG_TAG);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "log");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT, "image");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 }
