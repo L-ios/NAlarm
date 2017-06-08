@@ -9,9 +9,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,6 +81,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         Switch mAlarmSwitch;
         TextView mAlarmRptInfo;
         TextView mAlarmRing;
+        ImageView deleteView;
 
 
         AlarmInfoViewHolder(View view) {
@@ -92,6 +93,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mAlarmSwitch = (Switch) view.findViewById(R.id.alarm_switch);
             mAlarmRptInfo = (TextView) view.findViewById(R.id.alarm_rpt_info);
             mAlarmRing = (TextView) view.findViewById(R.id.alarm_ring);
+            deleteView = (ImageView) view.findViewById(R.id.delete);
         }
         
         void updateAlarmInfo(AlarmInfo info) {
@@ -108,19 +110,24 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
         
         void setClickListener() {
-            // TODO: 6/5/17 改善view的监听
             parent.setOnClickListener((v) -> {
                 AlarmAdapter.this.startAlarmInfoActivity(this.mAlarmInfo);
             });
 
-            parent.setOnLongClickListener((v) -> {
+            /*parent.setOnLongClickListener((v) -> {
                 // TODO: 6/6/17 进入编辑模式，进行删除
                 // feature: 6/6/17 长按如同电脑右键
                 Toast.makeText(mContext, "todo how to delete item", Toast.LENGTH_LONG).show();
                 return true;
-            });
+            });*/
+
             mAlarmSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 
+            });
+            
+            deleteView.setClickable(true);
+            deleteView.setOnClickListener(v -> {
+                // TODO: 17-6-7 delete alarm
             });
         }
 
