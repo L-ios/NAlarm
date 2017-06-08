@@ -11,6 +11,7 @@
 
     <application
         android:allowBackup="true"
+        android:windowSoftInputMode="stateHidden"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -33,6 +34,7 @@
         <activity
             android:name=".AlarmInfoActivity"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:theme="@style/AppTheme.AlarmInfo"/>
         <activity
             android:name=".AboutActivity"

@@ -2,26 +2,25 @@ package com.lionseun.lib8.nalarm;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -34,9 +33,10 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
     private TextView mAlarmName;
     private TextView mAlarmTime;
     private EditText mLabel;
-    private CheckBox mEnable;
+    private CheckBox mVibrate;
     private TextView mAlarmSound;
-    private TextView mRepeat;
+    private LinearLayout mRepeat;
+    private final CompoundButton[] dayButtons = new CompoundButton[7];
     private static final int RESULT_RINGTONE = 0x2;
 
     public static String getName(Context context, Calendar calendar) {
@@ -51,7 +51,6 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             return names[hour % names.length];
         }
     }
-    
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,10 +93,25 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         mLabel.setOnClickListener(v -> {
             mLabel.requestFocus();
         });
-        mRepeat = (TextView) findViewById(R.id.alarm_rpt);
-        mRepeat.setOnClickListener(v -> {
-            
-        });
+
+        final DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] weekdays = dfs.getShortWeekdays();
+        mRepeat = (LinearLayout) findViewById(R.id.alarm_rpt);
+        
+        int bIndex = 0;
+        for (int calendarDay : Weekdays.Order.MON_TO_SUN.getCalendarDays()) {
+            View itemView = getLayoutInflater().inflate(R.layout.days_of_week, mRepeat, false);
+            final CompoundButton dayButton =
+                    (CompoundButton) itemView.findViewById(R.id.days_check);
+            TextView textView = (TextView) itemView.findViewById(R.id.days);
+            textView.setText(weekdays[calendarDay]);
+            mRepeat.addView(itemView);
+            dayButton.setChecked(mAlarmInfo.daysOfWeek.isBitOn(calendarDay));
+            dayButtons[bIndex] = dayButton;
+            dayButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                mAlarmInfo.daysOfWeek = mAlarmInfo.daysOfWeek.setBit(calendarDay, isChecked);
+            });
+        }
         mAlarmSound = (TextView) findViewById(R.id.alarm_sound);
         mAlarmSound.setOnClickListener(v -> {
             Intent ringtoneIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
@@ -109,7 +123,10 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             startActivityForResult(ringtoneIntent, RESULT_RINGTONE);
         });
 
-        mEnable = (CheckBox) findViewById(R.id.is_vibrate);
+        mVibrate = (CheckBox) findViewById(R.id.is_vibrate);
+        mVibrate.setOnCheckedChangeListener((buttonView, isChecked) -> {mAlarmInfo.vibrate = isChecked;
+        });
+
     }
 
     @Override
@@ -205,9 +222,6 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             mAlarmName.setText(mAlarmInfo.name);
             updateTime(mAlarmInfo.hour, mAlarmInfo.minutes);
             mLabel.setText(mAlarmInfo.label);
-            updateSound(mAlarmInfo.getRingtone());
-            updateRepeat(mAlarmInfo.daysOfWeek);
-            mEnable.setChecked(mAlarmInfo.enabled);
         }
     }
 
@@ -236,13 +250,6 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         mAlarmSound.setText(ringtoneName);
     }
 
-    private void updateRepeat(Weekdays daysOfWeek) {
-        if (daysOfWeek == null) {
-            return;
-        }
-        mRepeat.setText(daysOfWeek.toString(this, Weekdays.Order.MON_TO_SUN));
-    }
-
     public void saveAlarmInfo() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_ALARM, mAlarmInfo);
@@ -250,7 +257,9 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
         if (is_new) {
             resultCode = MainActivity.RESULT_NEW_ALARM;
         } else {
-            resultCode = MainActivity.RESULT_UPDATA_ALARM;
+            resultCode = MainActivity.RESULT_UPDATE_ALARM;
+            AlarmHandler handler = new AlarmHandler(this, null);
+            handler.asyncUpdateAlarm(mAlarmInfo, false, false);
         }
         setResult(resultCode, intent);
     }
@@ -261,6 +270,6 @@ public class AlarmInfoActivity extends AppCompatActivity implements TimePickerDi
             mAlarmInfo.hour = hourOfDay;
             mAlarmInfo.minutes = minute;
         }
-        updateActivity();
+        updateTime(mAlarmInfo.hour, mAlarmInfo.minutes);
     }
 }

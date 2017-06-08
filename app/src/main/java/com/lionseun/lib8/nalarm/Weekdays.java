@@ -145,6 +145,7 @@ public final class Weekdays {
         if (bit == null) {
             return this;
         }
+        
         return new Weekdays(on ? (mBits | bit) : (mBits & ~bit));
     }
 

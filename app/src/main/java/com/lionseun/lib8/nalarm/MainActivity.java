@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private FloatingActionButton mAlarmAdd;
     private AlarmAdapter mAlarmAdapter;
     private AlarmHandler mAlarmHandler;
-    public static final int RESULT_UPDATA_ALARM = 2;
+    public static final int RESULT_UPDATE_ALARM = 2;
     public static final int RESULT_NEW_ALARM = 3;
     public static final String EXTRA_ALARM = "alarm.info";
 
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
             case RESULT_OK:
-            case RESULT_UPDATA_ALARM: {
+            case RESULT_UPDATE_ALARM: {
                 AlarmInfo alarmInfo = data.getParcelableExtra(EXTRA_ALARM);
                 mAlarmHandler.asyncUpdateAlarm(alarmInfo, false, false);
                 break;
@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
     
     private void FBLog(String msg) {
-
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, BuildConfig.APPLICATION_ID);
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, LOG_TAG);

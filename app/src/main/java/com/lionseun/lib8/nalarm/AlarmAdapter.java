@@ -1,5 +1,6 @@
 package com.lionseun.lib8.nalarm;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -40,7 +41,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         return new AlarmInfoViewHolder(mLayoutInflater.inflate(R.layout.alarm_item, viewGroup, false));
-
     }
 
     @Override
@@ -61,7 +61,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
         return this;
     }
-    
     
     @Override
     public int getItemCount() {
@@ -117,13 +116,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             parent.setOnClickListener((v) -> {
                 AlarmAdapter.this.startAlarmInfoActivity(this.mAlarmInfo);
             });
-
-            /*parent.setOnLongClickListener((v) -> {
-                // TODO: 6/6/17 进入编辑模式，进行删除
-                // feature: 6/6/17 长按如同电脑右键
-                Toast.makeText(mContext, "todo how to delete item", Toast.LENGTH_LONG).show();
-                return true;
-            });*/
 
             mAlarmSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 mAlarmInfo.enabled = isChecked;
@@ -183,7 +175,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         
         private String getRingName(Uri ringtoneUri) {
             String ringtoneName = RingtoneManager.getRingtone(mContext, ringtoneUri).getTitle(mContext);
-
             return ringtoneName;
         }
         
