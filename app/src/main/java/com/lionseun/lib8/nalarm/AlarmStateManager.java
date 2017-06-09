@@ -198,9 +198,12 @@ public final class AlarmStateManager extends BroadcastReceiver {
             LogUtils.i("Setting upcoming AlarmClockInfo for alarm: " + nextAlarm.mId);
             long alarmTime = nextAlarm.getAlarmTime().getTimeInMillis();
 
+            // TODO: 6/9/17 cancel alarm 
+            Intent intent = new Intent();
+            
             // Create an intent that can be used to show or edit details of the next alarm.
             PendingIntent viewIntent = PendingIntent.getActivity(context, nextAlarm.hashCode(),
-                    null,
+                    intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
             final AlarmClockInfo info = new AlarmClockInfo(alarmTime, viewIntent);
@@ -635,9 +638,45 @@ public final class AlarmStateManager extends BroadcastReceiver {
             // Alarm is still active, so initialize as a silent alarm
             setSilentState(context, instance);
         }
-
+        // The caller prefers to handle updateNextAlarm for optimization
+        if (updateNextAlarm) {
+            updateNextAlarm(context);
+        }
     }
 
+    /**
+     * Update the next alarm stored in framework. This value is also displayed in digital widgets
+     * and the clock tab in this app.
+     */
+    private static void updateNextAlarm(Context context) {
+        final AlarmInstance nextAlarm = getNextFiringAlarm(context);
+
+        if (Utils.isPreL()) {
+            updateNextAlarmInSystemSettings(context, nextAlarm);
+        } else {
+            updateNextAlarmInAlarmManager(context, nextAlarm);
+        }
+    }
+    
+    /**
+     * Returns an alarm instance of an alarm that's going to fire next.
+     *
+     * @param context application context
+     * @return an alarm instance that will fire earliest relative to current time.
+     */
+    public static AlarmInstance getNextFiringAlarm(Context context) {
+        final ContentResolver cr = context.getContentResolver();
+        final List<AlarmInstance> alarmInstances = AlarmInstance.getInstances(cr, null);
+
+        AlarmInstance nextAlarm = null;
+        for (AlarmInstance instance : alarmInstances) {
+            if (nextAlarm == null || instance.getAlarmTime().before(nextAlarm.getAlarmTime())) {
+                nextAlarm = instance;
+            }
+        }
+        return nextAlarm;
+    }
+    
     /**
      * This will delete and unregister all instances associated with alarmId, without affect
      * the alarm itself. This should be used whenever modifying or deleting an alarm.

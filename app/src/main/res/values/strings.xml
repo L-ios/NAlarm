@@ -84,4 +84,11 @@
         <item>Running</item>
         <item>Walk</item>
     </string-array>
+    
+    <string name="nalarm_about">
+        learn android in study Jams
+        design a alarm app
+        feature:
+            say alarm info, when alarm is coming.
+    </string>
 </resources>

@@ -27,4 +27,10 @@
         <item>跑步</item>
         <item>散步</item>
     </array>
+
+    <string name="nalarm_about">
+        学习android后，坐的应用，主要是设计应用界面
+        以后会做的：
+            当闹铃响的时候，会将闹铃的信息转化为语音播放
+    </string>
 </resources>

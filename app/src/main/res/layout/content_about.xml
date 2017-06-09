@@ -9,4 +9,14 @@
     tools:context="com.lionseun.lib8.nalarm.AboutActivity"
     tools:showIn="@layout/activity_about">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textSize="24sp"
+            android:text="@string/nalarm_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
+    
 </android.support.constraint.ConstraintLayout>
